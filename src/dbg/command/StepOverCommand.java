@@ -18,7 +18,7 @@ public class StepOverCommand implements DebugCommand {
       stepReq.addCountFilter(1);
       stepReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);
       stepReq.enable();
-      return "Step over command executed.";
+      return "RESUME: Step over command executed.";
     } catch (Exception e) {
       return "Error executing step-over: " + e.getMessage();
     }
