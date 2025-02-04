@@ -1,18 +1,33 @@
 package dbg;
 
-import com.sun.jdi.*;
+import com.sun.jdi.AbsentInformationException;
+import com.sun.jdi.Bootstrap;
+import com.sun.jdi.Location;
+import com.sun.jdi.ReferenceType;
+import com.sun.jdi.StackFrame;
+import com.sun.jdi.ThreadReference;
+import com.sun.jdi.VMDisconnectedException;
+import com.sun.jdi.VirtualMachine;
 import com.sun.jdi.connect.Connector;
 import com.sun.jdi.connect.IllegalConnectorArgumentsException;
 import com.sun.jdi.connect.LaunchingConnector;
 import com.sun.jdi.connect.VMStartException;
-import com.sun.jdi.event.*;
+import com.sun.jdi.event.BreakpointEvent;
+import com.sun.jdi.event.ClassPrepareEvent;
+import com.sun.jdi.event.Event;
+import com.sun.jdi.event.EventQueue;
+import com.sun.jdi.event.EventSet;
+import com.sun.jdi.event.StepEvent;
+import com.sun.jdi.event.VMDisconnectEvent;
+import com.sun.jdi.event.VMStartEvent;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.ClassPrepareRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.StepRequest;
+import dbg.command.CommandDispatcher;
+import dbg.command.DebuggerContext;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -114,20 +129,19 @@ public class ScriptableDebugger {
     }
 
     private void waitForUserCommand(ThreadReference thread) {
-        System.out.println("Commande : tapez 'step' pour avancer d'une instruction, sinon tapez autre chose pour continuer.");
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         try {
-            String cmd = reader.readLine();
-            if ("step".equalsIgnoreCase(cmd.trim())) {
-                enableStepRequest(thread);
-                System.out.println("Pas-à-pas activé. Exécution de l'instruction suivante...");
-            } else {
-                System.out.println("Reprise de l'exécution jusqu'au prochain point d'arrêt.");
-                // Ici, aucune StepRequest n'est configurée ; la VM reprendra son cours jusqu'au prochain événement.
+            // Récupérer la frame courante (la première de la pile)
+            StackFrame frame = thread.frame(0);
+            DebuggerContext context = new DebuggerContext(vm, thread, frame);
+            CommandDispatcher dispatcher = new CommandDispatcher();
+
+            System.out.println("Entrez une commande (ex: step, step-over, continue, frame, temporaries, stack, receiver, etc.) :");
+            Object result = dispatcher.dispatchCommand(context);
+            if (result != null) {
+                System.out.println(result.toString());
             }
-        } catch (IOException e) {
-            System.out.println("Erreur lors de la lecture de la commande utilisateur.");
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Error in waitForUserCommand: " + e.getMessage());
         }
     }
 
