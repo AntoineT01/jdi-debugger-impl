@@ -14,7 +14,7 @@ public class StepOverCommand implements DebugCommand {
           erm.deleteEventRequest(sr);
       }
       StepRequest stepReq = erm.createStepRequest(context.getCurrentThread(),
-        StepRequest.STEP_MIN, StepRequest.STEP_OVER);
+        StepRequest.STEP_LINE, StepRequest.STEP_OVER);
       stepReq.addCountFilter(1);
       stepReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);
       stepReq.enable();

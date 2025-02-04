@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class CommandDispatcher {
-  private DebugCommandRegistry registry = new DebugCommandRegistry();
+  private final DebugCommandRegistry registry = new DebugCommandRegistry();
 
   /**
    * Lit la commande utilisateur et l'exécute dans le contexte donné.

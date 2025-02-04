@@ -25,10 +25,7 @@ import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.ClassPrepareRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
-import com.sun.jdi.request.StepRequest;
 import dbg.command.CommandDispatcher;
-import dbg.command.DebugCommand;
-import dbg.command.DebugCommandRegistry;
 import dbg.command.DebuggerContext;
 
 import java.io.BufferedReader;
@@ -107,23 +104,6 @@ public class ScriptableDebugger {
   }
 
   /**
-   * Active une StepRequest sur le thread donné.
-   */
-  private void enableStepRequest(ThreadReference thread) {
-    EventRequestManager erm = vm.eventRequestManager();
-    for (StepRequest sr : erm.stepRequests()) {
-      if (sr.thread().equals(thread)) {
-        erm.deleteEventRequest(sr);
-      }
-    }
-    StepRequest stepReq = erm.createStepRequest(thread, StepRequest.STEP_MIN, StepRequest.STEP_OVER);
-    stepReq.addCountFilter(1);
-    stepReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);
-    stepReq.enable();
-    System.out.println("StepRequest activée pour le thread " + thread.name());
-  }
-
-  /**
    * Attend une commande utilisateur et retourne true si la commande indique de reprendre l'exécution.
    * Cette méthode boucle jusqu'à obtenir une commande dont le résultat commence par "RESUME:".
    */
@@ -131,43 +111,22 @@ public class ScriptableDebugger {
     boolean resumeRequested = false;
     BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     while (!resumeRequested) {
+      StackFrame frame;
       try {
-        StackFrame frame = null;
-        try {
-          frame = thread.frame(0);
-        } catch (IncompatibleThreadStateException itse) {
-          System.out.println("Impossible de récupérer la frame courante. Le thread n'est peut-être plus suspendu.");
-          return true;
+        frame = thread.frame(0);
+      } catch (IncompatibleThreadStateException itse) {
+        System.out.println("Impossible de récupérer la frame courante. Le thread n'est peut-être plus suspendu.");
+        return true;
+      }
+      DebuggerContext context = new DebuggerContext(vm, thread, frame);
+      CommandDispatcher dispatcher = new CommandDispatcher();
+      Object result = dispatcher.dispatchCommand(context);
+      if (result != null) {
+        String resStr = result.toString();
+        System.out.println(resStr);
+        if (resStr.startsWith("RESUME:")) {
+          resumeRequested = true;
         }
-        DebuggerContext context = new DebuggerContext(vm, thread, frame);
-        CommandDispatcher dispatcher = new CommandDispatcher();
-        System.out.print("dbg> ");
-        System.out.flush(); // Forcer le flush pour afficher le prompt
-        String line = reader.readLine();
-        if (line == null || line.trim().isEmpty()) {
-          System.out.println("Veuillez taper une commande.");
-          continue;
-        }
-        String[] tokens = line.trim().split("\\s+");
-        if (tokens.length == 0) continue;
-        String cmdName = tokens[0];
-        String[] args = new String[tokens.length - 1];
-        System.arraycopy(tokens, 1, args, 0, args.length);
-        DebugCommand command = new DebugCommandRegistry().getCommand(cmdName);
-        if (command == null) {
-          System.out.println("Commande inconnue: " + cmdName);
-          continue;
-        }
-        Object result = command.execute(args, context);
-        if (result != null) {
-          String resStr = result.toString();
-          System.out.println(resStr);
-          if (resStr.startsWith("RESUME:")) {
-            resumeRequested = true;
-          }
-        }
-      } catch (IOException e) {
-        System.out.println("Erreur lors de la lecture de la commande: " + e.getMessage());
       }
     }
     return resumeRequested;
