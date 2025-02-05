@@ -9,6 +9,15 @@ public class JDISimpleDebuggee {
         int x = 40;
         int power = 2;
         printPower(x, power);
+        JDISimpleDebuggee vartet = new JDISimpleDebuggee();
+        vartet.hello(description);
+    }
+
+    private void hello(String argument) {
+        String ouioui = "oui";
+        int toto = 4;
+        toto = 4;
+        int toato = 4;
     }
 
     public static double power(int x, int power) {

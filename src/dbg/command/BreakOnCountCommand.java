@@ -4,7 +4,6 @@ import com.sun.jdi.*;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequest;
 import com.sun.jdi.request.EventRequestManager;
-
 import java.util.List;
 
 public class BreakOnCountCommand implements DebugCommand {
@@ -29,8 +28,9 @@ public class BreakOnCountCommand implements DebugCommand {
       EventRequestManager erm = context.getVm().eventRequestManager();
       BreakpointRequest bpReq = erm.createBreakpointRequest(location);
       bpReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);
-      // On utilise la propriété count pour déclencher le breakpoint après un certain nombre d'atteintes
-      bpReq.addCountFilter(count);
+      // Stocker les propriétés pour le break-on-count
+      bpReq.putProperty("breakOnCount", count);       // valeur cible
+      bpReq.putProperty("currentHitCount", 0);          // compteur initialisé à 0
       bpReq.enable();
       return "Breakpoint (break-on-count) set at " + className + ":" + line + " with count " + count;
     } catch (Exception e) {

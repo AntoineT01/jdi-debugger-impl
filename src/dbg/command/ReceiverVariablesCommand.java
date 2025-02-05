@@ -3,7 +3,6 @@ package dbg.command;
 import com.sun.jdi.*;
 
 import java.util.List;
-import java.util.Map;
 
 public class ReceiverVariablesCommand implements DebugCommand {
   @Override

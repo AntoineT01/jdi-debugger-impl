@@ -10,19 +10,19 @@ Ne pas expliquer le TP classique
 
 ## Commandes à tester
 
-- [ ] ArgumentsCommand
-- [ ] BreakBeforeMethodCallCommand
+- [x] ArgumentsCommand
+- [x] BreakBeforeMethodCallCommand
 - [x] BreakCommand
-- [ ] BreakOnceCommand
-- [ ] BreakOnCountCommand
-- [ ] BreakpointsCommand
+- [x] BreakOnceCommand
+- [x] BreakOnCountCommand
+- [x] BreakpointsCommand
 - [x] ContinueCommand
 - [x] FrameCommand
-- [ ] MethodCommand
-- [ ] PrintVarCommand
-- [ ] ReceiverCommand
-- [ ] ReceiverVariablesCommand
-- [ ] SenderCommand
+- [x] MethodCommand
+- [x] PrintVarCommand
+- [x] ReceiverCommand
+- [x] ReceiverVariablesCommand
+- [x] SenderCommand
 - [x] StackCommand
 - [x] StepCommand
 - [x] StepOverCommand
