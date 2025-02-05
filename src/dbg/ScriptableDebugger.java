@@ -28,7 +28,6 @@ import com.sun.jdi.request.EventRequestManager;
 import dbg.command.CommandDispatcher;
 import dbg.command.DebuggerContext;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -37,8 +36,8 @@ import java.util.Map;
 
 public class ScriptableDebugger {
 
-  private Class debugClass;      // Classe cible à déboguer
-  private VirtualMachine vm;     // Machine virtuelle du debuggee
+  private Class<?> debugClass;
+  private VirtualMachine vm;
 
   /**
    * Connexion et lancement de la VM en passant en argument le nom de la classe debuggee.
@@ -54,7 +53,7 @@ public class ScriptableDebugger {
   /**
    * Méthode d'attachement au debuggee.
    */
-  public void attachTo(Class debuggeeClass) {
+  public void attachTo(Class<?> debuggeeClass) {
     this.debugClass = debuggeeClass;
     try {
       vm = connectAndLaunchVM();
@@ -89,7 +88,7 @@ public class ScriptableDebugger {
     try {
       List<Location> locations = refType.locationsOfLine(lineNumber);
       if (!locations.isEmpty()) {
-        Location location = locations.get(0);
+        Location location = locations.getFirst();
         EventRequestManager erm = vm.eventRequestManager();
         BreakpointRequest bpReq = erm.createBreakpointRequest(location);
         bpReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);
@@ -109,7 +108,7 @@ public class ScriptableDebugger {
    */
   private boolean waitForUserCommand(ThreadReference thread) {
     boolean resumeRequested = false;
-    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    new InputStreamReader(System.in);
     while (!resumeRequested) {
       StackFrame frame;
       try {
@@ -148,24 +147,19 @@ public class ScriptableDebugger {
           System.out.println("La VM a démarré.");
           // Événement non interactif : on resume immédiatement.
           eventSet.resume();
-        } else if (event instanceof ClassPrepareEvent) {
-          ClassPrepareEvent cpEvent = (ClassPrepareEvent) event;
+        } else if (event instanceof ClassPrepareEvent cpEvent) {
           ReferenceType refType = cpEvent.referenceType();
           System.out.println("Classe préparée: " + refType.name());
-          if (refType.name().equals(debugClass.getName())) {
-            setBreakPoint(refType, 6);
+          if (waitForUserCommand(cpEvent.thread())) {
+            eventSet.resume();
           }
-          // Événement non interactif : on resume immédiatement.
-          eventSet.resume();
-        } else if (event instanceof BreakpointEvent) {
-          BreakpointEvent bpEvent = (BreakpointEvent) event;
+        } else if (event instanceof BreakpointEvent bpEvent) {
           System.out.println("Breakpoint atteint à: " + bpEvent.location());
           // Événement interactif : on attend une commande de reprise.
           if (waitForUserCommand(bpEvent.thread())) {
             eventSet.resume();
           }
-        } else if (event instanceof StepEvent) {
-          StepEvent stepEvent = (StepEvent) event;
+        } else if (event instanceof StepEvent stepEvent) {
           System.out.println("StepEvent à: " + stepEvent.location());
           // Événement interactif : on attend une commande de reprise.
           if (waitForUserCommand(stepEvent.thread())) {

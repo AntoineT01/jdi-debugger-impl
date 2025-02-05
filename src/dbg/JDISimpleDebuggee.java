@@ -1,6 +1,7 @@
 package dbg;
 
 public class JDISimpleDebuggee {
+    String jesuispastemporaire = "Je suis pas temporaire";
 
     public static void main(String[] args) {
         String description = "Simple power printer";
@@ -12,6 +13,12 @@ public class JDISimpleDebuggee {
 
     public static double power(int x, int power) {
         double powerX = Math.pow(x, power);
+        StringBuilder salutGRosBGT = new StringBuilder("Salut");
+
+        for (int i = 0; i < 10; i++) {
+            salutGRosBGT.append("Salut");
+            int toto = 4;
+        }
         return powerX;
     }
 

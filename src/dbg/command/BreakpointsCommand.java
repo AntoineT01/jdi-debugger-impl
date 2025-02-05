@@ -1,6 +1,5 @@
 package dbg.command;
 
-import com.sun.jdi.*;
 import com.sun.jdi.request.BreakpointRequest;
 import com.sun.jdi.request.EventRequestManager;
 

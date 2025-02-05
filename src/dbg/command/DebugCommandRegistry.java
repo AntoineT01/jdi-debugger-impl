@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DebugCommandRegistry {
-  private Map<String, DebugCommand> commands = new HashMap<>();
+  private final Map<String, DebugCommand> commands = new HashMap<>();
 
   public DebugCommandRegistry() {
     // Enregistrer toutes les commandes ici :
