@@ -2,10 +2,13 @@ package dbg.graphic.view;
 
 import dbg.graphic.controller.DebuggerController;
 import dbg.graphic.model.DebuggerModel;
-import dbg.graphic.view.panels.*;
+import dbg.graphic.view.panels.BreakpointsPanel;
+import dbg.graphic.view.panels.ControlPanel;
+import dbg.graphic.view.panels.SourcePanel;
+import dbg.graphic.view.panels.StackPanel;
+import dbg.graphic.view.panels.VariablesPanel;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -102,6 +105,7 @@ public class DebuggerGUI extends JFrame implements Observer {
       DebuggerModel model = new DebuggerModel();
       DebuggerController controller = new DebuggerController(model);
       DebuggerGUI gui = new DebuggerGUI(model, controller);
+
       gui.setVisible(true);
     });
   }

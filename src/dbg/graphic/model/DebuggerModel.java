@@ -1,13 +1,15 @@
 package dbg.graphic.model;
 
+import dbg.command.DebuggerContext;
 import java.util.*;
 
 public class DebuggerModel extends Observable {
   private String currentSourceCode;
+  private int currentLine;
   private List<String> callStack;
   private Map<String, String> variables;
-  private List<Breakpoint> breakpoints;
-  private int currentLine;
+  private final List<Breakpoint> breakpoints;
+  private DebuggerContext currentDebuggerContext;
 
   public DebuggerModel() {
     callStack = new ArrayList<>();
@@ -15,18 +17,62 @@ public class DebuggerModel extends Observable {
     breakpoints = new ArrayList<>();
   }
 
-  public void updateState(String sourceCode, int line, List<String> stack, Map<String, String> vars) {
+  /**
+   * Met à jour l'état global du débogueur (source, ligne courante, pile, variables)
+   * et le contexte courant.
+   */
+  public void updateState(String sourceCode, int line, List<String> stack, Map<String, String> vars, DebuggerContext context) {
     this.currentSourceCode = sourceCode;
     this.currentLine = line;
     this.callStack = stack;
     this.variables = vars;
+    this.currentDebuggerContext = context;
     setChanged();
     notifyObservers();
   }
 
-  public String getCurrentSourceCode() { return currentSourceCode; }
-  public int getCurrentLine() { return currentLine; }
-  public List<String> getCallStack() { return callStack; }
-  public Map<String, String> getVariables() { return variables; }
-  public List<Breakpoint> getBreakpoints() { return breakpoints; }
+  public String getCurrentSourceCode() {
+    return currentSourceCode;
+  }
+
+  public int getCurrentLine() {
+    return currentLine;
+  }
+
+  public List<String> getCallStack() {
+    return callStack;
+  }
+
+  public Map<String, String> getVariables() {
+    return variables;
+  }
+
+  public List<Breakpoint> getBreakpoints() {
+    return breakpoints;
+  }
+
+  /**
+   * Retourne le contexte courant (VM, thread, frame) utilisé pour l'exécution des commandes.
+   */
+  public DebuggerContext getCurrentDebuggerContext() {
+    return currentDebuggerContext;
+  }
+
+  public void setCurrentDebuggerContext(DebuggerContext context) {
+    this.currentDebuggerContext = context;
+    setChanged();
+    notifyObservers();
+  }
+
+  public void addBreakpoint(Breakpoint bp) {
+    breakpoints.add(bp);
+    setChanged();
+    notifyObservers();
+  }
+
+  public void removeBreakpoint(Breakpoint bp) {
+    breakpoints.remove(bp);
+    setChanged();
+    notifyObservers();
+  }
 }

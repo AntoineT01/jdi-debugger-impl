@@ -1,82 +1,125 @@
 package dbg.graphic.controller;
 
+import dbg.command.CommandDispatcher;
+import dbg.command.DebuggerContext;
 import dbg.graphic.model.DebuggerModel;
 
 public class DebuggerController {
   private final DebuggerModel model;
+  private final CommandDispatcher dispatcher;
 
   public DebuggerController(DebuggerModel model) {
     this.model = model;
+    this.dispatcher = new CommandDispatcher();
+  }
+
+  // Méthode utilitaire pour récupérer le contexte courant depuis le modèle
+  private DebuggerContext getContext() {
+    return model.getCurrentDebuggerContext();
   }
 
   // Commandes de base de contrôle d'exécution
   public void executeStep() {
-    // Implémentation de step
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "step");
+    System.out.println(result);
   }
 
   public void executeStepOver() {
-    // Implémentation de step-over
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "step-over");
+    System.out.println(result);
   }
 
   public void executeContinue() {
-    // Implémentation de continue
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "continue");
+    System.out.println(result);
   }
 
   // Commandes d'information
   public void executeFrame() {
-    // Implémentation de frame
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "frame");
+    System.out.println(result);
   }
 
   public void executeTemporaries() {
-    // Implémentation de temporaries
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "temporaries");
+    System.out.println(result);
   }
 
   public void executeStack() {
-    // Implémentation de stack
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "stack");
+    System.out.println(result);
   }
 
   public void executeReceiver() {
-    // Implémentation de receiver
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "receiver");
+    System.out.println(result);
   }
 
   public void executeSender() {
-    // Implémentation de sender
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "sender");
+    System.out.println(result);
   }
 
   public void executeReceiverVariables() {
-    // Implémentation de receiver-variables
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "receiver-variables");
+    System.out.println(result);
   }
 
   public void executeMethod() {
-    // Implémentation de method
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "method");
+    System.out.println(result);
   }
 
   public void executeArguments() {
-    // Implémentation de arguments
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "arguments");
+    System.out.println(result);
   }
 
   public void executePrintVar(String varName) {
-    // Implémentation de print-var
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "print-var " + varName);
+    System.out.println(result);
   }
 
   // Commandes de breakpoint
   public void executeBreak(String filename, int lineNumber) {
-    // Implémentation de break
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "break " + filename + " " + lineNumber);
+    System.out.println(result);
   }
 
   public void executeBreakpoints() {
-    // Implémentation de breakpoints
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "breakpoints");
+    System.out.println(result);
   }
 
   public void executeBreakOnce(String filename, int lineNumber) {
-    // Implémentation de break-once
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "break-once " + filename + " " + lineNumber);
+    System.out.println(result);
   }
 
   public void executeBreakOnCount(String filename, int lineNumber, int count) {
-    // Implémentation de break-on-count
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "break-on-count " + filename + " " + lineNumber + " " + count);
+    System.out.println(result);
   }
 
   public void executeBreakBeforeMethod(String methodName) {
-    // Implémentation de break-before-method-call
+    DebuggerContext context = getContext();
+    Object result = dispatcher.dispatchCommand(context, "break-before-method-call " + methodName);
+    System.out.println(result);
   }
 }
