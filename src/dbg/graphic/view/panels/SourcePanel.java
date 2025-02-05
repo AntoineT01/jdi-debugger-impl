@@ -15,12 +15,26 @@ public class SourcePanel extends DebuggerPanel {
   }
 
   public void updateContent(String sourceCode, int currentLine) {
-    sourceArea.setText(sourceCode);
-    highlightLine(currentLine);
+    sourceArea.setText(sourceCode != null ? sourceCode : "");
+    if (currentLine >= 0) {
+      highlightLine(currentLine);
+    }
   }
 
   private void highlightLine(int line) {
-    // Highlight implementation
+    try {
+      String[] lines = sourceArea.getText().split("\n");
+      int pos = 0;
+      for (int i = 0; i < lines.length; i++) {
+        if (i == line - 1) {
+          sourceArea.setCaretPosition(pos);
+          break;
+        }
+        pos += lines[i].length() + 1;
+      }
+    } catch (Exception e) {
+      // Ignore highlighting errors
+    }
   }
 
   @Override

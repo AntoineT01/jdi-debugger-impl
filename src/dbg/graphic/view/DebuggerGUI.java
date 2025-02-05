@@ -1,5 +1,6 @@
 package dbg.graphic.view;
 
+import dbg.JDISimpleDebuggee;
 import dbg.graphic.controller.DebuggerController;
 import dbg.graphic.model.DebuggerModel;
 import dbg.graphic.view.panels.*;
@@ -102,6 +103,10 @@ public class DebuggerGUI extends JFrame implements Observer {
       DebuggerModel model = new DebuggerModel();
       DebuggerController controller = new DebuggerController(model);
       DebuggerGUI gui = new DebuggerGUI(model, controller);
+
+      // Démarrer le debugger avec JDISimpleDebuggee
+      controller.startDebugging(JDISimpleDebuggee.class);
+
       gui.setVisible(true);
     });
   }

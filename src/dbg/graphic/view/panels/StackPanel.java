@@ -13,7 +13,11 @@ public class StackPanel extends DebuggerPanel {
   }
 
   public void updateContent(List<String> stack) {
-    stackList.setListData(stack.toArray(new String[0]));
+    if (stack == null) {
+      stackList.setListData(new String[0]);
+    } else {
+      stackList.setListData(stack.toArray(new String[0]));
+    }
   }
 
   @Override

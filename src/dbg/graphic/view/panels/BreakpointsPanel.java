@@ -14,7 +14,11 @@ public class BreakpointsPanel extends DebuggerPanel {
   }
 
   public void updateContent(List<Breakpoint> breakpoints) {
-    breakpointsList.setListData(breakpoints.toArray(new Breakpoint[0]));
+    if (breakpoints == null) {
+      breakpointsList.setListData(new Breakpoint[0]);
+    } else {
+      breakpointsList.setListData(breakpoints.toArray(new Breakpoint[0]));
+    }
   }
 
   @Override

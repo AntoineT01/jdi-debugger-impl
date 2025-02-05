@@ -15,7 +15,9 @@ public class VariablesPanel extends DebuggerPanel {
 
   public void updateContent(Map<String, String> variables) {
     DefaultTableModel model = new DefaultTableModel(new String[]{"Name", "Value"}, 0);
-    variables.forEach((key, value) -> model.addRow(new Object[]{key, value}));
+    if (variables != null) {
+      variables.forEach((key, value) -> model.addRow(new Object[]{key, value}));
+    }
     variablesTable.setModel(model);
   }
 
