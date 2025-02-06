@@ -18,6 +18,7 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    workingDir = file("$projectDir/out/production/classes")
 }
 
 application {

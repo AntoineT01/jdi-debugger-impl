@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="tests" type="JUnit" factoryName="JUnit">
+    <module name="jdi-debugger-impl.test" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="21" />
+    <option name="PACKAGE_NAME" value="dbg" />
+    <option name="MAIN_CLASS_NAME" value="dbg.ScriptableDebuggerTest" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="class" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/out/production/classes" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

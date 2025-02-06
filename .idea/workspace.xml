@@ -5,258 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e43af01-702a-46b7-b907-75bce83714a7" name="Changes" comment="refacto: Gradle refacto fonctionnel">
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/checksums/checksums.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/dependencies-accessors/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/8.10/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gradle/vcs-1/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/JDISimpleDebuggee.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/JDISimpleDebugger.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/JDISimpleDebuggerMain.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/ScriptableDebugger.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/ArgumentsCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/BreakBeforeMethodCallCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/BreakCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/BreakOnCountCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/BreakOnceCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/BreakpointsCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/CommandDispatcher.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/ContinueCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/DebugCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/DebugCommandRegistry.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/DebuggerContext.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/FrameCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/MethodCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/PrintVarCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/ReceiverCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/ReceiverVariablesCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/SenderCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/StackCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/StepCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/StepOverCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/command/TemporariesCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/event/BreakpointEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/event/ClassPrepareEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/event/DebuggerEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/event/MethodEntryEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/event/VMDisconnectEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/event/VMStartEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/controller/DebuggerController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/model/Breakpoint.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/model/DebuggerModel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/util/IconFactory.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/view/DebuggerGUI.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/view/panels/BreakpointsPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/view/panels/ControlPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/view/panels/DebuggerPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/view/panels/SourcePanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/view/panels/StackPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/graphic/view/panels/VariablesPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/ui/CLIDebuggerUI.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/ui/DebuggerUI.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/classes/java/main/dbg/ui/GUIDebuggerUI.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/JDISimpleDebuggee.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/JDISimpleDebugger.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/JDISimpleDebuggerMain.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/ScriptableDebugger.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/ArgumentsCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/BreakBeforeMethodCallCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/BreakCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/BreakOnCountCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/BreakOnceCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/BreakpointsCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/CommandDispatcher.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/ContinueCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/DebugCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/DebugCommandRegistry.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/DebuggerContext.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/FrameCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/MethodCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/PrintVarCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/ReceiverCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/ReceiverVariablesCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/SenderCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/StackCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/StepCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/StepOverCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/command/TemporariesCommand.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/event/BreakpointEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/event/ClassPrepareEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/event/DebuggerEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/event/MethodEntryEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/event/VMDisconnectEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/event/VMStartEventHandler.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/controller/DebuggerController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/model/Breakpoint.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/model/DebuggerModel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/util/IconFactory.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/view/DebuggerGUI.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/view/panels/BreakpointsPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/view/panels/ControlPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/view/panels/DebuggerPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/view/panels/SourcePanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/view/panels/StackPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/graphic/view/panels/VariablesPanel.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/ui/CLIDebuggerUI.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/ui/DebuggerUI.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/classes/dbg/ui/GUIDebuggerUI.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/checksums/checksums.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/checksums/md5-checksums.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/checksums/sha1-checksums.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/dependencies-accessors/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/executionHistory/executionHistory.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/executionHistory/executionHistory.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/fileHashes/fileHashes.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/8.10/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/file-system.probe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/.gradle/vcs-1/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/out/production/jdi-debugger-impl/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/checksums/checksums.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/checksums/md5-checksums.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/checksums/sha1-checksums.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/dependencies-accessors/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/executionHistory/executionHistory.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/executionHistory/executionHistory.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/fileChanges/last-build.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/fileHashes/fileHashes.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/fileHashes/fileHashes.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/8.10/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/buildOutputCleanup/cache.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/file-system.probe" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/.gradle/vcs-1/gc.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/intellij-javadocs-4.0.1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/JDISimpleDebugger.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/JDISimpleDebugger.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jdi-debugger-impl.iml" beforeDir="false" afterPath="$PROJECT_DIR$/jdi-debugger-impl.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/JDISimpleDebuggee.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/JDISimpleDebugger.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/JDISimpleDebuggerMain.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/ScriptableDebugger.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/ArgumentsCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/BreakBeforeMethodCallCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/BreakCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/BreakOnCountCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/BreakOnceCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/BreakpointsCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/CommandDispatcher.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/ContinueCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/DebugCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/DebugCommandRegistry.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/DebuggerContext.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/FrameCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/MethodCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/PrintVarCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/ReceiverCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/ReceiverVariablesCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/SenderCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/StackCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/StepCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/StepOverCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/command/TemporariesCommand.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/event/BreakpointEventHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/event/ClassPrepareEventHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/event/DebuggerEventHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/event/MethodEntryEventHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/event/VMDisconnectEventHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/event/VMStartEventHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/controller/DebuggerController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/model/Breakpoint.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/model/DebuggerModel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/util/IconFactory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/view/DebuggerGUI.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/view/panels/BreakpointsPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/view/panels/ControlPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/view/panels/DebuggerPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/view/panels/SourcePanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/view/panels/StackPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/graphic/view/panels/VariablesPanel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/ui/CLIDebuggerUI.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/ui/DebuggerUI.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/jdi-debugger-impl/dbg/ui/GUIDebuggerUI.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/JDISimpleDebuggee.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/JDISimpleDebuggee.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/JDISimpleDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/JDISimpleDebugger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/JDISimpleDebuggerMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/JDISimpleDebuggerMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/ScriptableDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/ArgumentsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/ArgumentsCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/BreakBeforeMethodCallCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/BreakBeforeMethodCallCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/BreakCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/BreakCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/BreakOnCountCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/BreakOnCountCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/BreakOnceCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/BreakOnceCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/BreakpointsCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/BreakpointsCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/CommandDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/CommandDispatcher.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/ContinueCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/ContinueCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/DebugCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/DebugCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/DebugCommandRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/DebugCommandRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/DebuggerContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/DebuggerContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/FrameCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/FrameCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/MethodCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/MethodCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/PrintVarCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/PrintVarCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/ReceiverCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/ReceiverCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/ReceiverVariablesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/ReceiverVariablesCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/SenderCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/SenderCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/StackCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/StackCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/StepCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/StepCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/StepOverCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/StepOverCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/command/TemporariesCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/TemporariesCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/event/BreakpointEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/BreakpointEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/event/ClassPrepareEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/ClassPrepareEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/event/DebuggerEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/DebuggerEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/event/MethodEntryEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/MethodEntryEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/event/VMDisconnectEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/VMDisconnectEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/event/VMStartEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/VMStartEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/controller/DebuggerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/controller/DebuggerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/model/Breakpoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/model/Breakpoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/model/DebuggerModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/model/DebuggerModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/util/IconFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/util/IconFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/view/DebuggerGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/view/DebuggerGUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/view/panels/BreakpointsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/view/panels/BreakpointsPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/view/panels/ControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/view/panels/ControlPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/view/panels/DebuggerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/view/panels/DebuggerPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/view/panels/SourcePanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/view/panels/SourcePanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/view/panels/StackPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/view/panels/StackPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/graphic/view/panels/VariablesPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/view/panels/VariablesPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/ui/CLIDebuggerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ui/CLIDebuggerUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/ui/DebuggerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ui/DebuggerUI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/dbg/ui/GUIDebuggerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ui/GUIDebuggerUI.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/tests.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/8.10/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.10/fileHashes/resourceHashesCache.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/file-system.probe" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/file-system.probe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/command/BreakCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/BreakCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -320,8 +82,14 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.JDISimpleDebugger.executor": "Run",
+    "Gradle.ScriptableDebuggerTest.executor": "Run",
+    "Gradle.ScriptableDebuggerTest.testBreakCommand.executor": "Run",
+    "Gradle.ScriptableDebuggerTest.testBreakOnceCommand.executor": "Run",
+    "Gradle.ScriptableDebuggerTest.testContinueCommand (1).executor": "Run",
+    "Gradle.ScriptableDebuggerTest.testContinueCommand.executor": "Run",
     "Gradle.jdi-debugger-impl [:dbg.JDISimpleDebugger.main()].executor": "Run",
     "Gradle.jdi-debugger-impl [:dbg.JDISimpleDebuggerMain.main()].executor": "Run",
+    "JUnit.tests.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -331,10 +99,10 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.JDISimpleDebugger">
+  <component name="RunManager" selected="Gradle.ScriptableDebuggerTest.testBreakOnceCommand">
     <configuration name="JDISimpleDebuggerMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dbg.JDISimpleDebuggerMain" />
       <module name="jdi-debugger-impl.main" />
@@ -348,12 +116,117 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ScriptableDebuggerTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;dbg.ScriptableDebuggerTest&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="ScriptableDebuggerTest.testBreakCommand" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;dbg.ScriptableDebuggerTest.testBreakCommand&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="ScriptableDebuggerTest.testBreakOnceCommand" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;dbg.ScriptableDebuggerTest.testBreakOnceCommand&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="ScriptableDebuggerTest.testContinueCommand (1)" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+            <option value="--tests" />
+            <option value="&quot;dbg.ScriptableDebuggerTest.testContinueCommand&quot;" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>true</RunAsTest>
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.JDISimpleDebugger" />
       <item itemvalue="Application.JDISimpleDebuggerMain" />
+      <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakCommand" />
+      <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakOnceCommand" />
+      <item itemvalue="Gradle.ScriptableDebuggerTest" />
+      <item itemvalue="Gradle.ScriptableDebuggerTest.testContinueCommand (1)" />
+      <item itemvalue="JUnit.tests" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakOnceCommand" />
+        <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakCommand" />
+        <item itemvalue="Gradle.ScriptableDebuggerTest.testContinueCommand (1)" />
+        <item itemvalue="Gradle.ScriptableDebuggerTest" />
         <item itemvalue="Application.JDISimpleDebuggerMain" />
       </list>
     </recent_temporary>
@@ -375,8 +248,17 @@
       <option name="presentableId" value="Default" />
       <updated>1738846641527</updated>
       <workItem from="1738846644888" duration="641000" />
-      <workItem from="1738847304737" duration="120000" />
+      <workItem from="1738847304737" duration="1486000" />
     </task>
+    <task id="LOCAL-00001" summary="refacto: Gradle refacto fonctionnel">
+      <option name="closed" value="true" />
+      <created>1738847440026</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1738847440028</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -406,10 +288,19 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
-    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="refacto: Gradle refacto ?" />
     <MESSAGE value="refacto: Gradle refacto fonctionnel" />
     <option name="LAST_COMMIT_MESSAGE" value="refacto: Gradle refacto fonctionnel" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java</url>
+          <line>59</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

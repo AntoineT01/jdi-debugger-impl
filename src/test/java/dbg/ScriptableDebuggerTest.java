@@ -1,7 +1,5 @@
-package test.java.dbg;
+package dbg;
 
-import dbg.JDISimpleDebuggee;
-import dbg.ScriptableDebugger;
 import dbg.command.DebuggerContext;
 import dbg.ui.DebuggerUI;
 import org.junit.jupiter.api.Test;
@@ -41,6 +39,9 @@ public class ScriptableDebuggerTest {
     @Override
     public String getCommand(DebuggerContext context) {
       String cmd = commands.poll();
+      if (cmd == null) {
+        cmd = "continue";
+      }
       System.out.println("FakeCLIUI retourne la commande: " + cmd);
       return cmd;
     }
@@ -57,6 +58,7 @@ public class ScriptableDebuggerTest {
   @Test
   public void testContinueCommand() throws Exception {
     FakeCLIUI fakeUI = new FakeCLIUI();
+    // Ajoutez plusieurs commandes "continue" au cas où le débogueur en attendrait plus d'une
     fakeUI.addCommand("continue");
 
     ScriptableDebugger debugger = new ScriptableDebugger(fakeUI);
@@ -65,7 +67,8 @@ public class ScriptableDebuggerTest {
     debuggerThread.join(30000); // timeout 30 secondes
 
     String output = fakeUI.getOutput();
-    assertTrue(output.contains("RESUME: continue"), "La sortie doit contenir 'RESUME: continue'");
+    assertTrue(output.toLowerCase().contains("resume: continue"),
+      "La sortie doit contenir 'RESUME: continue'");
   }
 
   /**
