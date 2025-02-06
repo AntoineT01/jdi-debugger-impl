@@ -7,7 +7,7 @@ import com.sun.jdi.request.MethodEntryRequest;
 public class BreakBeforeMethodCallCommand implements DebugCommand {
   @Override
   public Object execute(String[] args, DebuggerContext context) {
-    if (args.length < 1) return "Usage: break-before-method-call <methodName>";
+    if (args.length != 1) return "Usage: break-before-method-call <methodName>";
     String targetMethod = args[0];
     try {
       EventRequestManager erm = context.getVm().eventRequestManager();

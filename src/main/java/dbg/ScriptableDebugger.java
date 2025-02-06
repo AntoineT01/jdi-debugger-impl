@@ -68,6 +68,7 @@ public class ScriptableDebugger {
   private void enableClassPrepareRequest() {
     EventRequestManager erm = vm.eventRequestManager();
     ClassPrepareRequest cpReq = erm.createClassPrepareRequest();
+    erm.createMethodEntryRequest().addClassFilter("dbg.JDISimpleDebuggee");
     cpReq.addClassFilter(debugClass.getName());
     cpReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);
     cpReq.enable();

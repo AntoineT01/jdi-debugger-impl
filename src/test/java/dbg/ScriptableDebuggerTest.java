@@ -196,13 +196,13 @@ public class ScriptableDebuggerTest {
     // La commande doit spécifier la classe et la méthode cible.
     fakeUI.addCommand("break dbg.JDISimpleDebuggee 8");
     fakeUI.addCommand("continue");
-    fakeUI.addCommand("break-before-method-call dbg.JDISimpleDebuggee hello");
+    fakeUI.addCommand("break-before-method-call hello");
     fakeUI.addCommand("continue");
 
     ScriptableDebugger debugger = new ScriptableDebugger(fakeUI);
     Thread debuggerThread = new Thread(() -> debugger.attachTo(JDISimpleDebuggee.class));
     debuggerThread.start();
-    debuggerThread.join(50000000);
+    debuggerThread.join(30000);
 
     String output = fakeUI.getOutput();
     // On s'attend à voir un message indiquant un arrêt avant l'appel de la méthode hello.
