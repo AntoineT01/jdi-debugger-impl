@@ -244,8 +244,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest" />
+        <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest.testStepOverCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest.testStepCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakOnCountCommand" />
