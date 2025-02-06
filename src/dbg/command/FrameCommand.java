@@ -12,7 +12,6 @@ public class FrameCommand implements DebugCommand {
     }
     StringBuilder sb = new StringBuilder();
 
-    // Afficher la location (classe, méthode, ligne)
     try {
       sb.append("Location: ").append(frame.location().toString()).append("\n");
       sb.append("Method: ").append(frame.location().method().name()).append("\n");
@@ -20,7 +19,7 @@ public class FrameCommand implements DebugCommand {
       sb.append("Impossible d'extraire la location ou la méthode: ").append(e.getMessage()).append("\n");
     }
 
-    // Essayer d'afficher les variables locales
+    // afficher les variables locales
     try {
       List<LocalVariable> vars = frame.visibleVariables();
       sb.append("Variables locales:\n");
@@ -32,7 +31,6 @@ public class FrameCommand implements DebugCommand {
       sb.append("Informations sur les variables locales non disponibles.\n");
     }
 
-    // Vous pouvez ajouter d'autres informations si nécessaire (par exemple, la pile d'appel, etc.)
     return sb.toString();
   }
 }
