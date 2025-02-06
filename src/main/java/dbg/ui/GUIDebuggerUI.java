@@ -1,70 +1,41 @@
 package dbg.ui;
 
 import dbg.command.DebuggerContext;
+import dbg.graphic.controller.DebuggerController;
+import dbg.graphic.model.DebuggerModel;
+import dbg.graphic.view.DebuggerGUI;
 
 import javax.swing.*;
-import java.awt.*;
 
-/**
- * Implémentation en mode GUI de l'interface DebuggerUI.
- * Cette version utilise une fenêtre Swing avec une zone de texte pour l'affichage et un champ pour saisir les commandes.
- */
 public class GUIDebuggerUI implements DebuggerUI {
-
-  private JFrame frame;
-  private JTextArea outputArea;
-  private JTextField commandField;
-  private final Object lock = new Object();
-  private String commandResult = null;
+  private DebuggerGUI gui;
 
   public GUIDebuggerUI() {
-    frame = new JFrame("Debugger GUI");
-    outputArea = new JTextArea(20, 50);
-    outputArea.setEditable(false);
-    commandField = new JTextField(50);
-
-    // Dans cette version, l'action du bouton "continue" (ou autre) déclenche la reprise.
-    commandField.addActionListener(e -> {
-      synchronized (lock) {
-        commandResult = commandField.getText();
-        commandField.setText("");
-        lock.notify();
-      }
+    // Instanciez le modèle et le contrôleur, puis la GUI.
+    DebuggerModel model = new DebuggerModel();
+    DebuggerController controller = new DebuggerController(model);
+    SwingUtilities.invokeLater(() -> {
+      gui = new DebuggerGUI(model, controller);
+      gui.setVisible(true);
     });
-
-    JPanel panel = new JPanel(new BorderLayout());
-    panel.add(new JScrollPane(outputArea), BorderLayout.CENTER);
-    panel.add(commandField, BorderLayout.SOUTH);
-
-    frame.setContentPane(panel);
-    frame.pack();
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setVisible(true);
   }
 
   @Override
   public void showOutput(String output) {
-    SwingUtilities.invokeLater(() -> outputArea.append(output + "\n"));
+    // Affichage dans une console dédiée ou dans la console système
+    System.out.println("GUI Output: " + output);
+    // Si votre GUI a une zone de console, vous pouvez l'actualiser ici.
   }
 
   @Override
   public String getCommand(DebuggerContext context) {
-    // Ici, on peut implémenter une logique si besoin, mais en mode GUI,
-    // on considère généralement que l'action de l'utilisateur via le bouton suffit.
-    SwingUtilities.invokeLater(() -> commandField.setEnabled(true));
-    synchronized (lock) {
-      try {
-        lock.wait();  // Attente que l'utilisateur saisisse une commande
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-      }
-    }
-    SwingUtilities.invokeLater(() -> commandField.setEnabled(false));
-    return commandResult;
+    // En mode GUI, la saisie se fait via des boutons, donc cette méthode ne sera pas utilisée.
+    return null;
   }
 
   @Override
   public boolean isBlocking() {
-    return false; // Le mode GUI se base sur des boutons et des callbacks, pas sur la lecture bloquante.
+    // En mode GUI, on ne bloque pas.
+    return false;
   }
 }

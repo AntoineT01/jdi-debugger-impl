@@ -1,5 +1,9 @@
 package dbg.graphic.controller;
 
+import com.sun.jdi.VirtualMachine;
+import com.sun.jdi.event.EventQueue;
+import com.sun.jdi.event.EventSet;
+import dbg.DebuggerSession;
 import dbg.command.CommandDispatcher;
 import dbg.command.DebuggerContext;
 import dbg.graphic.model.DebuggerModel;
@@ -14,119 +18,127 @@ public class DebuggerController implements DebuggerUI {
     this.dispatcher = new CommandDispatcher();
   }
 
-  // Méthode utilitaire pour récupérer le contexte courant depuis le modèle
+  /**
+   * Récupère le contexte courant.
+   * Si DebuggerSession contient un contexte suspendu, on le retourne ;
+   * sinon, on retourne celui provenant du modèle.
+   */
   private DebuggerContext getContext() {
+    DebuggerContext ctx = dbg.DebuggerSession.getContext();
+    if (ctx != null) {
+      return ctx;
+    }
     return model.getCurrentDebuggerContext();
   }
 
-  // Commandes de base de contrôle d'exécution
+  /**
+   * Méthode unifiée appelée par l'UI pour exécuter une commande (ex : "continue", "step", "step-over").
+   * Elle utilise le contexte et l'EventSet stockés dans DebuggerSession, appelle le CommandDispatcher,
+   * puis reprend l'exécution de la VM.
+   */
+  public synchronized String executeCommand(String command) {
+    if (DebuggerSession.getContext() == null || DebuggerSession.getCurrentEventSet() == null) {
+      return "Aucun contexte suspendu.";
+    }
+    String result = dispatcher.dispatchCommand(DebuggerSession.getContext(), command).toString();
+    // Reprise de l'exécution de la VM
+    DebuggerSession.getCurrentEventSet().resume();
+    // Réinitialisation du contexte et de l'EventSet
+//    DebuggerSession.setContext(null);
+//    DebuggerSession.setCurrentEventSet(null);
+    return result;
+  }
+
+  // Toutes les autres méthodes d'exécution délèguent à executeCommand :
+
   public void executeStep() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "step");
-    System.out.println(result);
+    String res = executeCommand("step");
+    System.out.println(res);
   }
 
   public void executeStepOver() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "step-over");
-    System.out.println(result);
+    String res = executeCommand("step-over");
+    System.out.println(res);
   }
 
   public void executeContinue() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "continue");
-    System.out.println(result);
+    String res = executeCommand("continue");
+    System.out.println(res);
   }
 
-  // Commandes d'information
   public void executeFrame() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "frame");
-    System.out.println(result);
+    String res = executeCommand("frame");
+    System.out.println(res);
   }
 
   public void executeTemporaries() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "temporaries");
-    System.out.println(result);
+    String res = executeCommand("temporaries");
+    System.out.println(res);
   }
 
   public void executeStack() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "stack");
-    System.out.println(result);
+    String res = executeCommand("stack");
+    System.out.println(res);
   }
 
   public void executeReceiver() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "receiver");
-    System.out.println(result);
+    String res = executeCommand("receiver");
+    System.out.println(res);
   }
 
   public void executeSender() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "sender");
-    System.out.println(result);
+    String res = executeCommand("sender");
+    System.out.println(res);
   }
 
   public void executeReceiverVariables() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "receiver-variables");
-    System.out.println(result);
+    String res = executeCommand("receiver-variables");
+    System.out.println(res);
   }
 
   public void executeMethod() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "method");
-    System.out.println(result);
+    String res = executeCommand("method");
+    System.out.println(res);
   }
 
   public void executeArguments() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "arguments");
-    System.out.println(result);
+    String res = executeCommand("arguments");
+    System.out.println(res);
   }
 
   public void executePrintVar(String varName) {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "print-var " + varName);
-    System.out.println(result);
+    String res = executeCommand("print-var " + varName);
+    System.out.println(res);
   }
 
-  // Commandes de breakpoint
   public void executeBreak(String filename, int lineNumber) {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "break " + filename + " " + lineNumber);
-    System.out.println(result);
+    String res = executeCommand("break " + filename + " " + lineNumber);
+    System.out.println(res);
   }
 
   public void executeBreakpoints() {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "breakpoints");
-    System.out.println(result);
+    String res = executeCommand("breakpoints");
+    System.out.println(res);
   }
 
   public void executeBreakOnce(String filename, int lineNumber) {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "break-once " + filename + " " + lineNumber);
-    System.out.println(result);
+    String res = executeCommand("break-once " + filename + " " + lineNumber);
+    System.out.println(res);
   }
 
   public void executeBreakOnCount(String filename, int lineNumber, int count) {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "break-on-count " + filename + " " + lineNumber + " " + count);
-    System.out.println(result);
+    String res = executeCommand("break-on-count " + filename + " " + lineNumber + " " + count);
+    System.out.println(res);
   }
 
   public void executeBreakBeforeMethod(String methodName) {
-    DebuggerContext context = getContext();
-    Object result = dispatcher.dispatchCommand(context, "break-before-method-call " + methodName);
-    System.out.println(result);
+    String res = executeCommand("break-before-method-call " + methodName);
+    System.out.println(res);
   }
 
   @Override
   public void showOutput(String message) {
-
+    System.out.println("Controller Output: " + message);
   }
 
   @Override
@@ -136,6 +148,7 @@ public class DebuggerController implements DebuggerUI {
 
   @Override
   public boolean isBlocking() {
+    // Ici, on considère que le contrôleur est utilisé en mode GUI asynchrone.
     return false;
   }
 }

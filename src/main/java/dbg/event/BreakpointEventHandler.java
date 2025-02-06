@@ -3,7 +3,9 @@ package dbg.event;
 import com.sun.jdi.event.BreakpointEvent;
 import com.sun.jdi.event.Event;
 import com.sun.jdi.event.EventSet;
+import dbg.DebuggerSession;
 import dbg.ScriptableDebugger;
+import dbg.command.DebuggerContext;
 import dbg.ui.DebuggerUI;
 
 public class BreakpointEventHandler implements DebuggerEventHandler {

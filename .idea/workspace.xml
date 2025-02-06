@@ -5,17 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e43af01-702a-46b7-b907-75bce83714a7" name="Changes" comment="refacto: Tests unitaires TOUS fonctionnels">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dbg/DebuggerSession.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dbg/command/StepBackCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dbg/command/StepBackNCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/dbg/state/ExecutionState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/DebuggerMain.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/DebuggerSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/DebuggerSession.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/command/DebugCommandRegistry.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/DebugCommandRegistry.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/command/DebuggerContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/DebuggerContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dbg/command/StepCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/StepCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/BreakpointEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/BreakpointEventHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/StepEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/StepEventHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/VMStartEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/VMStartEventHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/graphic/controller/DebuggerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/controller/DebuggerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/graphic/model/DebuggerModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/model/DebuggerModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/ui/GUIDebuggerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ui/GUIDebuggerUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +35,12 @@
         </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="jdi-debugger-impl" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -93,6 +98,7 @@
     "Gradle.ScriptableDebuggerTest.testContinueCommand.executor": "Run",
     "Gradle.ScriptableDebuggerTest.testStepCommand.executor": "Run",
     "Gradle.ScriptableDebuggerTest.testStepOverCommand.executor": "Run",
+    "Gradle.jdi-debugger-impl [:dbg.DebuggerMain.main()].executor": "Run",
     "Gradle.jdi-debugger-impl [:dbg.JDISimpleDebugger.main()].executor": "Run",
     "Gradle.jdi-debugger-impl [:dbg.JDISimpleDebuggerMain.main()].executor": "Run",
     "JUnit.tests.executor": "Run",
@@ -109,7 +115,7 @@
     "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
   }
 }]]></component>
-  <component name="RunManager" selected="Application.JDISimpleDebugger">
+  <component name="RunManager" selected="Application.DebuggerMain">
     <configuration name="ScriptableDebuggerTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -148,30 +154,6 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;dbg.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="ScriptableDebuggerTest.testBreakOnCountCommand" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;dbg.ScriptableDebuggerTest.testBreakOnCountCommand&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -232,8 +214,8 @@
     </configuration>
     <list>
       <item itemvalue="Application.JDISimpleDebugger" />
+      <item itemvalue="Application.DebuggerMain" />
       <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand" />
-      <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakOnCountCommand" />
       <item itemvalue="Gradle.ScriptableDebuggerTest.testStepCommand" />
       <item itemvalue="Gradle.ScriptableDebuggerTest.testStepOverCommand" />
       <item itemvalue="Gradle.ScriptableDebuggerTest" />
@@ -241,11 +223,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest" />
+        <item itemvalue="Application.DebuggerMain" />
+        <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest.testStepOverCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest.testStepCommand" />
-        <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakOnCountCommand" />
       </list>
     </recent_temporary>
   </component>
@@ -351,6 +333,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/dbg/command/BreakBeforeMethodCallCommand.java</url>
           <line>19</line>
           <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java</url>
+          <line>150</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -102,50 +102,54 @@ public class ScriptableDebugger {
    * via le CommandDispatcher qui renvoie une chaîne commençant par "RESUME:" ou, explicitement, la commande "continue".
    */
   public boolean waitForUser(ThreadReference thread, EventSet eventSet) {
+    // Pour les UI non bloquantes (ex. GUI), reprendre immédiatement.
     if (!ui.isBlocking()) {
-      return true;
-    }
-
-    try {
-      if (debuggerContext == null) {
-        debuggerContext = new DebuggerContext(vm, thread, thread.frame(0));
-      } else {
-        debuggerContext.setCurrentThread(thread);
-        debuggerContext.setCurrentFrame(thread.frame(0));
+      StackFrame frame;
+      try {
+        frame = thread.frame(0);
+      } catch (IncompatibleThreadStateException e) {
+        ui.showOutput("Impossible de récupérer la frame courante. Le thread n'est peut-être plus suspendu.");
+        return true;
       }
-
-      String command = ui.getCommand(debuggerContext);
+      DebuggerSession.setContext(new DebuggerContext(vm, thread, frame));
+      return false;
+    }
+    boolean resumeRequested = false;
+    while (!resumeRequested) {
+      StackFrame frame;
+      try {
+        frame = thread.frame(0);
+      } catch (IncompatibleThreadStateException e) {
+        ui.showOutput("Impossible de récupérer la frame courante. Le thread n'est peut-être plus suspendu.");
+        return true;
+      }
+      DebuggerContext context = new DebuggerContext(vm, thread, frame);
+      String command = ui.getCommand(context);
       if (command == null || command.trim().isEmpty()) {
         ui.showOutput("Veuillez taper une commande.");
-        return false;
+        continue;
       }
-
       CommandDispatcher dispatcher = new CommandDispatcher();
-      Object result = dispatcher.dispatchCommand(debuggerContext, command);
-
+      Object result = dispatcher.dispatchCommand(context, command);
       if (result != null) {
         String resStr = result.toString();
         ui.showOutput(resStr);
-        if (resStr.startsWith("RESTART:")) {
-          // Redémarrer la VM
-          vm.exit(0);
-          attachTo(debugClass);
-          return false;
+        if (resStr.startsWith("RESUME:")) {
+          resumeRequested = true;
         }
-        return resStr.startsWith("RESUME:");
       }
-    } catch (Exception e) {
-      ui.showOutput("Erreur: " + e.getMessage());
     }
-    return false;
+    return resumeRequested;
   }
 
 
   public void startDebugger() throws VMDisconnectedException, InterruptedException {
+    DebuggerSession.setContext(new DebuggerContext(vm, null, null));
     EventQueue eventQueue = vm.eventQueue();
     boolean debugging = true;
     while (debugging) {
       EventSet eventSet = eventQueue.remove();
+      DebuggerSession.setCurrentEventSet(eventSet);
       for (Event event : eventSet) {
         ui.showOutput(">> " + event);
         DebuggerEventHandler handler = getHandlerForEvent(event);
@@ -176,5 +180,9 @@ public class ScriptableDebugger {
       }
     }
     return handler;
+  }
+
+  public VirtualMachine getVm() {
+    return vm;
   }
 }

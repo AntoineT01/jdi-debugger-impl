@@ -1,0 +1,520 @@
+Index: src/main/java/dbg/event/BreakpointEventHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package dbg.event;\r\n\r\nimport com.sun.jdi.event.BreakpointEvent;\r\nimport com.sun.jdi.event.Event;\r\nimport com.sun.jdi.event.EventSet;\r\nimport dbg.ScriptableDebugger;\r\nimport dbg.ui.DebuggerUI;\r\n\r\npublic class BreakpointEventHandler implements DebuggerEventHandler {\r\n  private DebuggerUI ui;\r\n\r\n  public BreakpointEventHandler(DebuggerUI ui) {\r\n    this.ui = ui;\r\n  }\r\n\r\n  @Override\r\n  public boolean handle(Event event, EventSet eventSet, ScriptableDebugger debugger) {\r\n    BreakpointEvent bpEvent = (BreakpointEvent) event;\r\n    ui.showOutput(\"Breakpoint atteint à: \" + bpEvent.location());\r\n\r\n    // Gestion du hit count\r\n    Object targetObj = bpEvent.request().getProperty(\"breakOnCount\");\r\n    if (targetObj != null) {\r\n      int targetCount = (Integer) targetObj;\r\n      Object currentObj = bpEvent.request().getProperty(\"currentHitCount\");\r\n      int currentHit = (currentObj == null) ? 0 : (Integer) currentObj;\r\n      currentHit++;\r\n      bpEvent.request().putProperty(\"currentHitCount\", currentHit);\r\n      ui.showOutput(\"Hit count for this breakpoint: \" + currentHit);\r\n      if (currentHit % targetCount != 0) {\r\n        ui.showOutput(\"Breakpoint atteint mais pas sur le nombre ciblé (\" + targetCount + \"). Reprise automatique.\");\r\n        return true;\r\n      } else {\r\n        ui.showOutput(\"Breakpoint atteint sur le nombre ciblé (\" + targetCount + \").\");\r\n        bpEvent.request().putProperty(\"breakOnCount\", null);\r\n      }\r\n    }\r\n\r\n    // Vérification du breakpoint one-shot\r\n    Object onceObj = bpEvent.request().getProperty(\"breakOnce\");\r\n    if (onceObj != null && (Boolean) onceObj) {\r\n      bpEvent.request().disable();\r\n      bpEvent.virtualMachine().eventRequestManager().deleteEventRequest(bpEvent.request());\r\n      ui.showOutput(\"Breakpoint one-shot supprimé après exécution.\");\r\n      return debugger.waitForUser(bpEvent.thread(), eventSet);\r\n    }\r\n\r\n    return debugger.waitForUser(bpEvent.thread(), eventSet);\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/dbg/event/BreakpointEventHandler.java b/src/main/java/dbg/event/BreakpointEventHandler.java
+--- a/src/main/java/dbg/event/BreakpointEventHandler.java	(revision bcb039b9c92b954fa3bfafee17ec8c4a1c5ca296)
++++ b/src/main/java/dbg/event/BreakpointEventHandler.java	(date 1738854331568)
+@@ -29,7 +29,7 @@
+       ui.showOutput("Hit count for this breakpoint: " + currentHit);
+       if (currentHit % targetCount != 0) {
+         ui.showOutput("Breakpoint atteint mais pas sur le nombre ciblé (" + targetCount + "). Reprise automatique.");
+-        return true;
++        return returnGuiCli(bpEvent, eventSet, debugger);
+       } else {
+         ui.showOutput("Breakpoint atteint sur le nombre ciblé (" + targetCount + ").");
+         bpEvent.request().putProperty("breakOnCount", null);
+@@ -42,9 +42,20 @@
+       bpEvent.request().disable();
+       bpEvent.virtualMachine().eventRequestManager().deleteEventRequest(bpEvent.request());
+       ui.showOutput("Breakpoint one-shot supprimé après exécution.");
+-      return debugger.waitForUser(bpEvent.thread(), eventSet);
++      return returnGuiCli(bpEvent, eventSet, debugger);
+     }
++
++    return returnGuiCli(bpEvent, eventSet, debugger);
++  }
+ 
+-    return debugger.waitForUser(bpEvent.thread(), eventSet);
++  private boolean returnGuiCli(BreakpointEvent bpEvent, EventSet eventSet, ScriptableDebugger debugger) {
++    if (ui.isBlocking()) {
++      return debugger.waitForUser(bpEvent.thread(), eventSet);
++    } else {
++      // En mode GUI, on peut mettre à jour le contexte dans le contrôleur et reprendre immédiatement.
++      // Par exemple, DebuggerController.getInstance().setCurrentContext(...);
++      eventSet.resume();
++      return true;
++    }
+   }
+ }
+Index: src/main/java/dbg/ui/GUIDebuggerUI.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package dbg.ui;\r\n\r\nimport dbg.command.DebuggerContext;\r\n\r\nimport javax.swing.*;\r\nimport java.awt.*;\r\n\r\n/**\r\n * Implémentation en mode GUI de l'interface DebuggerUI.\r\n * Cette version utilise une fenêtre Swing avec une zone de texte pour l'affichage et un champ pour saisir les commandes.\r\n */\r\npublic class GUIDebuggerUI implements DebuggerUI {\r\n\r\n  private JFrame frame;\r\n  private JTextArea outputArea;\r\n  private JTextField commandField;\r\n  private final Object lock = new Object();\r\n  private String commandResult = null;\r\n\r\n  public GUIDebuggerUI() {\r\n    frame = new JFrame(\"Debugger GUI\");\r\n    outputArea = new JTextArea(20, 50);\r\n    outputArea.setEditable(false);\r\n    commandField = new JTextField(50);\r\n\r\n    // Dans cette version, l'action du bouton \"continue\" (ou autre) déclenche la reprise.\r\n    commandField.addActionListener(e -> {\r\n      synchronized (lock) {\r\n        commandResult = commandField.getText();\r\n        commandField.setText(\"\");\r\n        lock.notify();\r\n      }\r\n    });\r\n\r\n    JPanel panel = new JPanel(new BorderLayout());\r\n    panel.add(new JScrollPane(outputArea), BorderLayout.CENTER);\r\n    panel.add(commandField, BorderLayout.SOUTH);\r\n\r\n    frame.setContentPane(panel);\r\n    frame.pack();\r\n    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);\r\n    frame.setVisible(true);\r\n  }\r\n\r\n  @Override\r\n  public void showOutput(String output) {\r\n    SwingUtilities.invokeLater(() -> outputArea.append(output + \"\\n\"));\r\n  }\r\n\r\n  @Override\r\n  public String getCommand(DebuggerContext context) {\r\n    // Ici, on peut implémenter une logique si besoin, mais en mode GUI,\r\n    // on considère généralement que l'action de l'utilisateur via le bouton suffit.\r\n    SwingUtilities.invokeLater(() -> commandField.setEnabled(true));\r\n    synchronized (lock) {\r\n      try {\r\n        lock.wait();  // Attente que l'utilisateur saisisse une commande\r\n      } catch (InterruptedException e) {\r\n        Thread.currentThread().interrupt();\r\n      }\r\n    }\r\n    SwingUtilities.invokeLater(() -> commandField.setEnabled(false));\r\n    return commandResult;\r\n  }\r\n\r\n  @Override\r\n  public boolean isBlocking() {\r\n    return false; // Le mode GUI se base sur des boutons et des callbacks, pas sur la lecture bloquante.\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/dbg/ui/GUIDebuggerUI.java b/src/main/java/dbg/ui/GUIDebuggerUI.java
+--- a/src/main/java/dbg/ui/GUIDebuggerUI.java	(revision bcb039b9c92b954fa3bfafee17ec8c4a1c5ca296)
++++ b/src/main/java/dbg/ui/GUIDebuggerUI.java	(date 1738853358776)
+@@ -1,70 +1,45 @@
+ package dbg.ui;
+ 
+ import dbg.command.DebuggerContext;
++import dbg.graphic.controller.DebuggerController;
++import dbg.graphic.model.DebuggerModel;
++import dbg.graphic.view.DebuggerGUI;
+ 
+ import javax.swing.*;
+-import java.awt.*;
+ 
+-/**
+- * Implémentation en mode GUI de l'interface DebuggerUI.
+- * Cette version utilise une fenêtre Swing avec une zone de texte pour l'affichage et un champ pour saisir les commandes.
+- */
+ public class GUIDebuggerUI implements DebuggerUI {
+-
+-  private JFrame frame;
+-  private JTextArea outputArea;
+-  private JTextField commandField;
+-  private final Object lock = new Object();
+-  private String commandResult = null;
++  private DebuggerGUI gui;
+ 
+   public GUIDebuggerUI() {
+-    frame = new JFrame("Debugger GUI");
+-    outputArea = new JTextArea(20, 50);
+-    outputArea.setEditable(false);
+-    commandField = new JTextField(50);
+-
+-    // Dans cette version, l'action du bouton "continue" (ou autre) déclenche la reprise.
+-    commandField.addActionListener(e -> {
+-      synchronized (lock) {
+-        commandResult = commandField.getText();
+-        commandField.setText("");
+-        lock.notify();
+-      }
++    // Créez le modèle et le contrôleur, puis la GUI.
++    DebuggerModel model = new DebuggerModel();
++    DebuggerController controller = new DebuggerController(model);
++    // La création de la GUI se fait sur l'EDT.
++    SwingUtilities.invokeLater(() -> {
++      gui = new DebuggerGUI(model, controller);
++      gui.setVisible(true);
+     });
+-
+-    JPanel panel = new JPanel(new BorderLayout());
+-    panel.add(new JScrollPane(outputArea), BorderLayout.CENTER);
+-    panel.add(commandField, BorderLayout.SOUTH);
+-
+-    frame.setContentPane(panel);
+-    frame.pack();
+-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+-    frame.setVisible(true);
+   }
+ 
+   @Override
+   public void showOutput(String output) {
+-    SwingUtilities.invokeLater(() -> outputArea.append(output + "\n"));
++    // Ici, vous pouvez soit ajouter une zone de "console" dans DebuggerGUI et l'actualiser,
++    // soit, pour l'instant, simplement afficher dans la console.
++    System.out.println("GUI Output: " + output);
++    // Si vous avez une méthode dans DebuggerGUI pour afficher des messages, par exemple :
++    // gui.appendConsole(output);
+   }
+ 
+   @Override
+   public String getCommand(DebuggerContext context) {
+-    // Ici, on peut implémenter une logique si besoin, mais en mode GUI,
+-    // on considère généralement que l'action de l'utilisateur via le bouton suffit.
+-    SwingUtilities.invokeLater(() -> commandField.setEnabled(true));
+-    synchronized (lock) {
+-      try {
+-        lock.wait();  // Attente que l'utilisateur saisisse une commande
+-      } catch (InterruptedException e) {
+-        Thread.currentThread().interrupt();
+-      }
+-    }
+-    SwingUtilities.invokeLater(() -> commandField.setEnabled(false));
+-    return commandResult;
++    // En mode GUI, la saisie se fait par les actions sur les boutons ou via d'autres composants interactifs.
++    // Ici, nous renvoyons null pour indiquer que la méthode n'est pas bloquante.
++    return null;
+   }
+ 
+   @Override
+   public boolean isBlocking() {
+-    return false; // Le mode GUI se base sur des boutons et des callbacks, pas sur la lecture bloquante.
++    // En mode GUI, on ne bloque pas la lecture d'une commande (les commandes sont déclenchées par des actions).
++    return false;
+   }
+ }
+Index: src/main/java/dbg/graphic/controller/DebuggerController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package dbg.graphic.controller;\r\n\r\nimport dbg.command.CommandDispatcher;\r\nimport dbg.command.DebuggerContext;\r\nimport dbg.graphic.model.DebuggerModel;\r\nimport dbg.ui.DebuggerUI;\r\n\r\npublic class DebuggerController implements DebuggerUI {\r\n  private final DebuggerModel model;\r\n  private final CommandDispatcher dispatcher;\r\n\r\n  public DebuggerController(DebuggerModel model) {\r\n    this.model = model;\r\n    this.dispatcher = new CommandDispatcher();\r\n  }\r\n\r\n  // Méthode utilitaire pour récupérer le contexte courant depuis le modèle\r\n  private DebuggerContext getContext() {\r\n    return model.getCurrentDebuggerContext();\r\n  }\r\n\r\n  // Commandes de base de contrôle d'exécution\r\n  public void executeStep() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"step\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeStepOver() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"step-over\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeContinue() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"continue\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  // Commandes d'information\r\n  public void executeFrame() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"frame\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeTemporaries() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"temporaries\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeStack() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"stack\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeReceiver() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"receiver\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeSender() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"sender\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeReceiverVariables() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"receiver-variables\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeMethod() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"method\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeArguments() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"arguments\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executePrintVar(String varName) {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"print-var \" + varName);\r\n    System.out.println(result);\r\n  }\r\n\r\n  // Commandes de breakpoint\r\n  public void executeBreak(String filename, int lineNumber) {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"break \" + filename + \" \" + lineNumber);\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeBreakpoints() {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"breakpoints\");\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeBreakOnce(String filename, int lineNumber) {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"break-once \" + filename + \" \" + lineNumber);\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeBreakOnCount(String filename, int lineNumber, int count) {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"break-on-count \" + filename + \" \" + lineNumber + \" \" + count);\r\n    System.out.println(result);\r\n  }\r\n\r\n  public void executeBreakBeforeMethod(String methodName) {\r\n    DebuggerContext context = getContext();\r\n    Object result = dispatcher.dispatchCommand(context, \"break-before-method-call \" + methodName);\r\n    System.out.println(result);\r\n  }\r\n\r\n  @Override\r\n  public void showOutput(String message) {\r\n\r\n  }\r\n\r\n  @Override\r\n  public String getCommand(DebuggerContext context) {\r\n    return \"\";\r\n  }\r\n\r\n  @Override\r\n  public boolean isBlocking() {\r\n    return false;\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/dbg/graphic/controller/DebuggerController.java b/src/main/java/dbg/graphic/controller/DebuggerController.java
+--- a/src/main/java/dbg/graphic/controller/DebuggerController.java	(revision bcb039b9c92b954fa3bfafee17ec8c4a1c5ca296)
++++ b/src/main/java/dbg/graphic/controller/DebuggerController.java	(date 1738853983420)
+@@ -8,10 +8,26 @@
+ public class DebuggerController implements DebuggerUI {
+   private final DebuggerModel model;
+   private final CommandDispatcher dispatcher;
++  private static DebuggerController instance;
++  private DebuggerContext currentContext;
+ 
+   public DebuggerController(DebuggerModel model) {
+     this.model = model;
+     this.dispatcher = new CommandDispatcher();
++    instance = this;
++  }
++
++  public static DebuggerController getInstance() {
++    return instance;
++  }
++
++  public void setCurrentContext(DebuggerContext context) {
++    this.currentContext = context;
++    // Vous pouvez également notifier la vue que le contexte a été mis à jour, par ex. via le modèle.
++  }
++
++  public DebuggerContext getCurrentContext() {
++    return currentContext;
+   }
+ 
+   // Méthode utilitaire pour récupérer le contexte courant depuis le modèle
+Index: src/main/java/dbg/event/ClassPrepareEventHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package dbg.event;\r\n\r\nimport com.sun.jdi.ReferenceType;\r\nimport com.sun.jdi.event.ClassPrepareEvent;\r\nimport com.sun.jdi.event.Event;\r\nimport com.sun.jdi.event.EventSet;\r\nimport dbg.ScriptableDebugger;\r\nimport dbg.ui.DebuggerUI;\r\n\r\npublic class ClassPrepareEventHandler implements DebuggerEventHandler {\r\n  private DebuggerUI ui;\r\n\r\n  public ClassPrepareEventHandler(DebuggerUI ui) {\r\n    this.ui = ui;\r\n  }\r\n\r\n  @Override\r\n  public boolean handle(Event event, EventSet eventSet, ScriptableDebugger debugger) {\r\n    ClassPrepareEvent cpEvent = (ClassPrepareEvent) event;\r\n    ReferenceType refType = cpEvent.referenceType();\r\n    ui.showOutput(\"Classe préparée: \" + refType.name());\r\n    // En mode CLI, on attend une commande. En GUI, le comportement peut être différent.\r\n    return debugger.waitForUser(cpEvent.thread(), eventSet);\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/dbg/event/ClassPrepareEventHandler.java b/src/main/java/dbg/event/ClassPrepareEventHandler.java
+--- a/src/main/java/dbg/event/ClassPrepareEventHandler.java	(revision bcb039b9c92b954fa3bfafee17ec8c4a1c5ca296)
++++ b/src/main/java/dbg/event/ClassPrepareEventHandler.java	(date 1738854183752)
+@@ -1,14 +1,16 @@
+ package dbg.event;
+ 
+ import com.sun.jdi.ReferenceType;
++import com.sun.jdi.ThreadReference;
+ import com.sun.jdi.event.ClassPrepareEvent;
+ import com.sun.jdi.event.Event;
+ import com.sun.jdi.event.EventSet;
+ import dbg.ScriptableDebugger;
++import dbg.command.DebuggerContext;
+ import dbg.ui.DebuggerUI;
+ 
+ public class ClassPrepareEventHandler implements DebuggerEventHandler {
+-  private DebuggerUI ui;
++  private final DebuggerUI ui;
+ 
+   public ClassPrepareEventHandler(DebuggerUI ui) {
+     this.ui = ui;
+@@ -19,7 +21,15 @@
+     ClassPrepareEvent cpEvent = (ClassPrepareEvent) event;
+     ReferenceType refType = cpEvent.referenceType();
+     ui.showOutput("Classe préparée: " + refType.name());
+-    // En mode CLI, on attend une commande. En GUI, le comportement peut être différent.
+-    return debugger.waitForUser(cpEvent.thread(), eventSet);
++
++    if (ui.isBlocking()) {
++      // Mode CLI : attendre une commande
++      return debugger.waitForUser(cpEvent.thread(), eventSet);
++    } else {
++      // Mode GUI : on ne bloque pas et on peut mettre à jour le contexte si nécessaire
++      // Par exemple, on pourrait notifier le contrôleur ici
++      eventSet.resume();
++      return true;
++    }
+   }
+ }
+Index: src/main/java/dbg/event/StepEventHandler.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package dbg.event;\r\n\r\nimport com.sun.jdi.event.Event;\r\nimport com.sun.jdi.event.EventSet;\r\nimport com.sun.jdi.event.StepEvent;\r\nimport dbg.ScriptableDebugger;\r\nimport dbg.ui.DebuggerUI;\r\n\r\npublic class StepEventHandler implements DebuggerEventHandler {\r\n  private final DebuggerUI ui;\r\n\r\n  public StepEventHandler(DebuggerUI ui) {\r\n    this.ui = ui;\r\n  }\r\n\r\n  @Override\r\n  public boolean handle(Event event, EventSet eventSet, ScriptableDebugger debugger) {\r\n    StepEvent stepEvent = (StepEvent) event;\r\n    ui.showOutput(\"StepEvent reached at: \" + stepEvent.location());\r\n    // Attendre une commande de l'utilisateur (par exemple, pour afficher l'état ou pour continuer)\r\n    return debugger.waitForUser(stepEvent.thread(), eventSet);\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/dbg/event/StepEventHandler.java b/src/main/java/dbg/event/StepEventHandler.java
+--- a/src/main/java/dbg/event/StepEventHandler.java	(revision bcb039b9c92b954fa3bfafee17ec8c4a1c5ca296)
++++ b/src/main/java/dbg/event/StepEventHandler.java	(date 1738854047785)
+@@ -4,6 +4,8 @@
+ import com.sun.jdi.event.EventSet;
+ import com.sun.jdi.event.StepEvent;
+ import dbg.ScriptableDebugger;
++import dbg.command.DebuggerContext;
++import dbg.graphic.controller.DebuggerController;
+ import dbg.ui.DebuggerUI;
+ 
+ public class StepEventHandler implements DebuggerEventHandler {
+@@ -16,8 +18,22 @@
+   @Override
+   public boolean handle(Event event, EventSet eventSet, ScriptableDebugger debugger) {
+     StepEvent stepEvent = (StepEvent) event;
++    DebuggerContext context = null;
++    try {
++      context = new DebuggerContext(debugger.getVm(), stepEvent.thread(), stepEvent.thread().frame(0));
++    } catch (Exception e) {
++      ui.showOutput("Erreur lors de la création du DebuggerContext: " + e.getMessage());
++    }
++    // Mettre à jour le DebuggerController avec le contexte courant.
++    DebuggerController.getInstance().setCurrentContext(context);
+     ui.showOutput("StepEvent reached at: " + stepEvent.location());
+-    // Attendre une commande de l'utilisateur (par exemple, pour afficher l'état ou pour continuer)
+-    return debugger.waitForUser(stepEvent.thread(), eventSet);
++    if (debugger.getUi().isBlocking()) {
++      boolean resume = debugger.waitForUser(stepEvent.thread(), eventSet);
++      eventSet.resume();
++      return resume;
++    } else {
++      eventSet.resume();
++      return true;
++    }
+   }
+ }
+Index: src/main/java/dbg/ScriptableDebugger.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package dbg;\r\n\r\nimport com.sun.jdi.*;\r\nimport com.sun.jdi.connect.*;\r\nimport com.sun.jdi.event.*;\r\nimport com.sun.jdi.request.*;\r\nimport dbg.command.CommandDispatcher;\r\nimport dbg.command.DebuggerContext;\r\nimport dbg.event.*;\r\nimport dbg.ui.DebuggerUI;\r\nimport dbg.ui.CLIDebuggerUI;\r\n\r\nimport java.io.BufferedReader;\r\nimport java.io.IOException;\r\nimport java.io.InputStreamReader;\r\nimport java.util.HashMap;\r\nimport java.util.Map;\r\n\r\npublic class ScriptableDebugger {\r\n\r\n  private Class<?> debugClass;\r\n  private VirtualMachine vm;\r\n  private final DebuggerUI ui;\r\n  private final Map<Class<? extends Event>, DebuggerEventHandler> eventHandlers;\r\n\r\n  // Constructeur avec UI personnalisée\r\n  public ScriptableDebugger(DebuggerUI ui) {\r\n    this.ui = ui;\r\n    this.eventHandlers = new HashMap<>();\r\n    registerEventHandlers();\r\n  }\r\n\r\n  // Constructeur par défaut utilisant le mode CLI\r\n  public ScriptableDebugger() {\r\n    this(new CLIDebuggerUI());\r\n  }\r\n\r\n  private void registerEventHandlers() {\r\n    eventHandlers.put(VMStartEvent.class, new VMStartEventHandler(ui));\r\n    eventHandlers.put(ClassPrepareEvent.class, new ClassPrepareEventHandler(ui));\r\n    eventHandlers.put(BreakpointEvent.class, new BreakpointEventHandler(ui));\r\n    eventHandlers.put(MethodEntryEvent.class, new MethodEntryEventHandler(ui));\r\n    eventHandlers.put(VMDisconnectEvent.class, new VMDisconnectEventHandler(ui));\r\n    eventHandlers.put(StepEvent.class, new StepEventHandler(ui));\r\n  }\r\n\r\n  public VirtualMachine connectAndLaunchVM() throws IOException, IllegalConnectorArgumentsException, VMStartException {\r\n    LaunchingConnector launchingConnector = Bootstrap.virtualMachineManager().defaultConnector();\r\n    Map<String, Connector.Argument> arguments = launchingConnector.defaultArguments();\r\n    arguments.get(\"main\").setValue(debugClass.getName());\r\n    ui.showOutput(\"Lancement de la VM pour \" + debugClass.getName());\r\n    return launchingConnector.launch(arguments);\r\n  }\r\n\r\n  public void attachTo(Class<?> debuggeeClass) {\r\n    this.debugClass = debuggeeClass;\r\n    try {\r\n      vm = connectAndLaunchVM();\r\n      startOutputReader();\r\n      enableClassPrepareRequest();\r\n      startDebugger();\r\n    } catch (Exception e) {\r\n      ui.showOutput(\"Erreur lors de l'attachement : \" + e.getMessage());\r\n      e.printStackTrace();\r\n    }\r\n  }\r\n\r\n  private void enableClassPrepareRequest() {\r\n    EventRequestManager erm = vm.eventRequestManager();\r\n    ClassPrepareRequest cpReq = erm.createClassPrepareRequest();\r\n    erm.createMethodEntryRequest().addClassFilter(\"dbg.JDISimpleDebuggee\");\r\n    cpReq.addClassFilter(debugClass.getName());\r\n    cpReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);\r\n    cpReq.enable();\r\n    ui.showOutput(\"ClassPrepareRequest activée pour \" + debugClass.getName());\r\n  }\r\n\r\n  private void startOutputReader() {\r\n    new Thread(() -> {\r\n      try (BufferedReader br = new BufferedReader(new InputStreamReader(vm.process().getInputStream()))) {\r\n        String line;\r\n        while ((line = br.readLine()) != null) {\r\n          ui.showOutput(\"\\nTarget VM: \" + line + \"\\n\");\r\n        }\r\n      } catch (IOException e) {\r\n        ui.showOutput(\"Erreur lors de la lecture de la sortie de la VM : \" + e.getMessage());\r\n      }\r\n    }, \"VM-OutputReader\").start();\r\n  }\r\n\r\n  /**\r\n   * Attend une commande de l'utilisateur.\r\n   * En mode CLI (ui.isBlocking()==true), cette méthode lit en boucle jusqu'à obtenir la commande \"continue\" (peu importe la casse)\r\n   * ou une commande via le CommandDispatcher qui renvoie une chaîne commençant par \"RESUME:\".\r\n   * En mode GUI, elle retourne immédiatement, car l'action se fait via des boutons.\r\n   */\r\n  /**\r\n   * Attend une commande de l'utilisateur.\r\n   * En mode CLI (ui.isBlocking()==true), cette méthode lit en boucle jusqu'à obtenir une commande\r\n   * via le CommandDispatcher qui renvoie une chaîne commençant par \"RESUME:\" ou, explicitement, la commande \"continue\".\r\n   */\r\n  public boolean waitForUser(ThreadReference thread, EventSet eventSet) {\r\n    // Pour les UI non bloquantes (ex. GUI), reprendre immédiatement.\r\n    if (!ui.isBlocking()) {\r\n      return true;\r\n    }\r\n    boolean resumeRequested = false;\r\n    while (!resumeRequested) {\r\n      StackFrame frame;\r\n      try {\r\n        frame = thread.frame(0);\r\n      } catch (IncompatibleThreadStateException e) {\r\n        ui.showOutput(\"Impossible de récupérer la frame courante. Le thread n'est peut-être plus suspendu.\");\r\n        return true;\r\n      }\r\n      DebuggerContext context = new DebuggerContext(vm, thread, frame);\r\n      String command = ui.getCommand(context);\r\n      if (command == null || command.trim().isEmpty()) {\r\n        ui.showOutput(\"Veuillez taper une commande.\");\r\n        continue;\r\n      }\r\n      CommandDispatcher dispatcher = new CommandDispatcher();\r\n      Object result = dispatcher.dispatchCommand(context, command);\r\n      if (result != null) {\r\n        String resStr = result.toString();\r\n        ui.showOutput(resStr);\r\n        if (resStr.startsWith(\"RESUME:\")) {\r\n          resumeRequested = true;\r\n        }\r\n      }\r\n    }\r\n    return resumeRequested;\r\n  }\r\n\r\n  public void startDebugger() throws VMDisconnectedException, InterruptedException {\r\n    EventQueue eventQueue = vm.eventQueue();\r\n    boolean debugging = true;\r\n    while (debugging) {\r\n      EventSet eventSet = eventQueue.remove();\r\n      for (Event event : eventSet) {\r\n        ui.showOutput(\">> \" + event);\r\n        DebuggerEventHandler handler = getHandlerForEvent(event);\r\n        if (handler != null) {\r\n          if (handler.handle(event, eventSet, this)) {\r\n            eventSet.resume();\r\n          }\r\n        } else {\r\n          eventSet.resume();\r\n        }\r\n        if (event instanceof VMDisconnectEvent) {\r\n          debugging = false;\r\n          break;\r\n        }\r\n      }\r\n    }\r\n    ui.showOutput(\"Fin du débogage.\");\r\n  }\r\n\r\n  private DebuggerEventHandler getHandlerForEvent(Event event) {\r\n    DebuggerEventHandler handler = eventHandlers.get(event.getClass());\r\n    if (handler == null) {\r\n      for (Map.Entry<Class<? extends Event>, DebuggerEventHandler> entry : eventHandlers.entrySet()) {\r\n        if (entry.getKey().isInstance(event)) {\r\n          handler = entry.getValue();\r\n          break;\r\n        }\r\n      }\r\n    }\r\n    return handler;\r\n  }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/dbg/ScriptableDebugger.java b/src/main/java/dbg/ScriptableDebugger.java
+--- a/src/main/java/dbg/ScriptableDebugger.java	(revision bcb039b9c92b954fa3bfafee17ec8c4a1c5ca296)
++++ b/src/main/java/dbg/ScriptableDebugger.java	(date 1738855889813)
+@@ -40,8 +40,8 @@
+     eventHandlers.put(ClassPrepareEvent.class, new ClassPrepareEventHandler(ui));
+     eventHandlers.put(BreakpointEvent.class, new BreakpointEventHandler(ui));
+     eventHandlers.put(MethodEntryEvent.class, new MethodEntryEventHandler(ui));
+-    eventHandlers.put(VMDisconnectEvent.class, new VMDisconnectEventHandler(ui));
+     eventHandlers.put(StepEvent.class, new StepEventHandler(ui));
++    eventHandlers.put(VMDisconnectEvent.class, new VMDisconnectEventHandler(ui));
+   }
+ 
+   public VirtualMachine connectAndLaunchVM() throws IOException, IllegalConnectorArgumentsException, VMStartException {
+@@ -68,7 +68,6 @@
+   private void enableClassPrepareRequest() {
+     EventRequestManager erm = vm.eventRequestManager();
+     ClassPrepareRequest cpReq = erm.createClassPrepareRequest();
+-    erm.createMethodEntryRequest().addClassFilter("dbg.JDISimpleDebuggee");
+     cpReq.addClassFilter(debugClass.getName());
+     cpReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);
+     cpReq.enable();
+@@ -89,18 +88,10 @@
+   }
+ 
+   /**
+-   * Attend une commande de l'utilisateur.
+-   * En mode CLI (ui.isBlocking()==true), cette méthode lit en boucle jusqu'à obtenir la commande "continue" (peu importe la casse)
+-   * ou une commande via le CommandDispatcher qui renvoie une chaîne commençant par "RESUME:".
+-   * En mode GUI, elle retourne immédiatement, car l'action se fait via des boutons.
+-   */
+-  /**
+-   * Attend une commande de l'utilisateur.
+-   * En mode CLI (ui.isBlocking()==true), cette méthode lit en boucle jusqu'à obtenir une commande
+-   * via le CommandDispatcher qui renvoie une chaîne commençant par "RESUME:" ou, explicitement, la commande "continue".
++   * En mode CLI, cette méthode attend la saisie d'une commande via getCommand().
++   * En mode GUI (isBlocking() == false), on renvoie immédiatement true.
+    */
+   public boolean waitForUser(ThreadReference thread, EventSet eventSet) {
+-    // Pour les UI non bloquantes (ex. GUI), reprendre immédiatement.
+     if (!ui.isBlocking()) {
+       return true;
+     }
+@@ -142,10 +133,10 @@
+         DebuggerEventHandler handler = getHandlerForEvent(event);
+         if (handler != null) {
+           if (handler.handle(event, eventSet, this)) {
+-            eventSet.resume();
++//            eventSet.resume();
+           }
+         } else {
+-          eventSet.resume();
++//          eventSet.resume();
+         }
+         if (event instanceof VMDisconnectEvent) {
+           debugging = false;
+@@ -168,4 +159,13 @@
+     }
+     return handler;
+   }
++
++  // Ajout de getters utiles pour récupérer la VM et l'UI (pour les handlers par exemple)
++  public VirtualMachine getVm() {
++    return vm;
++  }
++
++  public DebuggerUI getUi() {
++    return ui;
++  }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"6e43af01-702a-46b7-b907-75bce83714a7\" name=\"Changes\" comment=\"refacto: Tests unitaires TOUS fonctionnels\">\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.bin\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.bin\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.10/executionHistory/executionHistory.lock\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.bin\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.bin\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.10/fileHashes/fileHashes.lock\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/8.10/fileHashes/resourceHashesCache.bin\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/8.10/fileHashes/resourceHashesCache.bin\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/dbg/ScriptableDebugger.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/build/classes/java/main/dbg/ScriptableDebugger.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/classes/java/main/dbg/command/BreakBeforeMethodCallCommand.class\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/build/classes/java/main/dbg/command/BreakBeforeMethodCallCommand.class\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/build/tmp/compileJava/previous-compilation-data.bin\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/dbg/command/BreakBeforeMethodCallCommand.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/dbg/command/BreakBeforeMethodCallCommand.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"ExternalProjectsData\">\r\n    <projectState path=\"$PROJECT_DIR$\">\r\n      <ProjectState />\r\n    </projectState>\r\n  </component>\r\n  <component name=\"ExternalProjectsManager\">\r\n    <system id=\"GRADLE\">\r\n      <state>\r\n        <task path=\"$PROJECT_DIR$\">\r\n          <activation />\r\n        </task>\r\n        <projects_view>\r\n          <tree_state>\r\n            <expand>\r\n              <path>\r\n                <item name=\"\" type=\"6a2764b6:ExternalProjectsStructure$RootNode\" />\r\n                <item name=\"jdi-debugger-impl\" type=\"f1a62948:ProjectNode\" />\r\n              </path>\r\n            </expand>\r\n            <select />\r\n          </tree_state>\r\n        </projects_view>\r\n      </state>\r\n    </system>\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"refactor/refactoring\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;Flintpop&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/AntoineT01/jdi-debugger-impl&quot;,\r\n    &quot;accountId&quot;: &quot;70b2339c-808a-448a-9345-5cc5d6ad3cf2&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;customColor&quot;: &quot;&quot;,\r\n  &quot;associatedIndex&quot;: 2\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2sfVVTkoq6zjHCSn2yijZnekdUA\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.JDISimpleDebugger.executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand.executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.testBreakCommand.executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.testBreakOnCountCommand.executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.testBreakOnceCommand.executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.testContinueCommand (1).executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.testContinueCommand.executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.testStepCommand.executor\": \"Run\",\r\n    \"Gradle.ScriptableDebuggerTest.testStepOverCommand.executor\": \"Run\",\r\n    \"Gradle.jdi-debugger-impl [:dbg.JDISimpleDebugger.main()].executor\": \"Run\",\r\n    \"Gradle.jdi-debugger-impl [:dbg.JDISimpleDebuggerMain.main()].executor\": \"Run\",\r\n    \"JUnit.tests.executor\": \"Run\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"git-widget-placeholder\": \"refactor/refactoring-with-gradle\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Users/darwh/OneDrive/UBO_Travail/Semestre_10/Industrialisation du logiciel/jdi-debugger-impl/out/production/classes\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"settings.editor.selected.configurable\": \"project.propVCSSupport.CommitDialog\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RunManager\" selected=\"Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand\">\r\n    <configuration name=\"ScriptableDebuggerTest\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\r\n      <ExternalSystemSettings>\r\n        <option name=\"executionName\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\r\n        <option name=\"scriptParameters\" value=\"\" />\r\n        <option name=\"taskDescriptions\">\r\n          <list />\r\n        </option>\r\n        <option name=\"taskNames\">\r\n          <list>\r\n            <option value=\":test\" />\r\n            <option value=\"--tests\" />\r\n            <option value=\"&quot;dbg.ScriptableDebuggerTest&quot;\" />\r\n          </list>\r\n        </option>\r\n        <option name=\"vmOptions\" />\r\n      </ExternalSystemSettings>\r\n      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>\r\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\r\n      <DebugAllEnabled>false</DebugAllEnabled>\r\n      <RunAsTest>true</RunAsTest>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"ScriptableDebuggerTest.testBreakBeforeMethodCallCommand\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\r\n      <ExternalSystemSettings>\r\n        <option name=\"executionName\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\r\n        <option name=\"scriptParameters\" value=\"\" />\r\n        <option name=\"taskDescriptions\">\r\n          <list />\r\n        </option>\r\n        <option name=\"taskNames\">\r\n          <list>\r\n            <option value=\":test\" />\r\n            <option value=\"--tests\" />\r\n            <option value=\"&quot;dbg.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand&quot;\" />\r\n          </list>\r\n        </option>\r\n        <option name=\"vmOptions\" />\r\n      </ExternalSystemSettings>\r\n      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>\r\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\r\n      <DebugAllEnabled>false</DebugAllEnabled>\r\n      <RunAsTest>true</RunAsTest>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"ScriptableDebuggerTest.testBreakOnCountCommand\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\r\n      <ExternalSystemSettings>\r\n        <option name=\"executionName\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\r\n        <option name=\"scriptParameters\" value=\"\" />\r\n        <option name=\"taskDescriptions\">\r\n          <list />\r\n        </option>\r\n        <option name=\"taskNames\">\r\n          <list>\r\n            <option value=\":test\" />\r\n            <option value=\"--tests\" />\r\n            <option value=\"&quot;dbg.ScriptableDebuggerTest.testBreakOnCountCommand&quot;\" />\r\n          </list>\r\n        </option>\r\n        <option name=\"vmOptions\" />\r\n      </ExternalSystemSettings>\r\n      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>\r\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\r\n      <DebugAllEnabled>false</DebugAllEnabled>\r\n      <RunAsTest>true</RunAsTest>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"ScriptableDebuggerTest.testStepCommand\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\r\n      <ExternalSystemSettings>\r\n        <option name=\"executionName\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\r\n        <option name=\"scriptParameters\" value=\"\" />\r\n        <option name=\"taskDescriptions\">\r\n          <list />\r\n        </option>\r\n        <option name=\"taskNames\">\r\n          <list>\r\n            <option value=\":test\" />\r\n            <option value=\"--tests\" />\r\n            <option value=\"&quot;dbg.ScriptableDebuggerTest.testStepCommand&quot;\" />\r\n          </list>\r\n        </option>\r\n        <option name=\"vmOptions\" />\r\n      </ExternalSystemSettings>\r\n      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>\r\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\r\n      <DebugAllEnabled>false</DebugAllEnabled>\r\n      <RunAsTest>true</RunAsTest>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <configuration name=\"ScriptableDebuggerTest.testStepOverCommand\" type=\"GradleRunConfiguration\" factoryName=\"Gradle\" temporary=\"true\">\r\n      <ExternalSystemSettings>\r\n        <option name=\"executionName\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"externalSystemIdString\" value=\"GRADLE\" />\r\n        <option name=\"scriptParameters\" value=\"\" />\r\n        <option name=\"taskDescriptions\">\r\n          <list />\r\n        </option>\r\n        <option name=\"taskNames\">\r\n          <list>\r\n            <option value=\":test\" />\r\n            <option value=\"--tests\" />\r\n            <option value=\"&quot;dbg.ScriptableDebuggerTest.testStepOverCommand&quot;\" />\r\n          </list>\r\n        </option>\r\n        <option name=\"vmOptions\" />\r\n      </ExternalSystemSettings>\r\n      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>\r\n      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>\r\n      <DebugAllEnabled>false</DebugAllEnabled>\r\n      <RunAsTest>true</RunAsTest>\r\n      <method v=\"2\" />\r\n    </configuration>\r\n    <list>\r\n      <item itemvalue=\"Application.JDISimpleDebugger\" />\r\n      <item itemvalue=\"Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand\" />\r\n      <item itemvalue=\"Gradle.ScriptableDebuggerTest.testBreakOnCountCommand\" />\r\n      <item itemvalue=\"Gradle.ScriptableDebuggerTest.testStepCommand\" />\r\n      <item itemvalue=\"Gradle.ScriptableDebuggerTest.testStepOverCommand\" />\r\n      <item itemvalue=\"Gradle.ScriptableDebuggerTest\" />\r\n      <item itemvalue=\"JUnit.tests\" />\r\n    </list>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Gradle.ScriptableDebuggerTest\" />\r\n        <item itemvalue=\"Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand\" />\r\n        <item itemvalue=\"Gradle.ScriptableDebuggerTest.testStepOverCommand\" />\r\n        <item itemvalue=\"Gradle.ScriptableDebuggerTest.testStepCommand\" />\r\n        <item itemvalue=\"Gradle.ScriptableDebuggerTest.testBreakOnCountCommand\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"6e43af01-702a-46b7-b907-75bce83714a7\" name=\"Changes\" comment=\"\" />\r\n      <created>1738846641527</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1738846641527</updated>\r\n      <workItem from=\"1738846644888\" duration=\"641000\" />\r\n      <workItem from=\"1738847304737\" duration=\"4977000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"refacto: Gradle refacto fonctionnel\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738847440026</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738847440028</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"refacto: Tests unitaires fonctionnels\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738849379251</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738849379251</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"refacto: Tests unitaires fonctionnels sur quasiment tous les breaks\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738851512080</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738851512080</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"4\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State>\r\n              <option name=\"FILTERS\">\r\n                <map>\r\n                  <entry key=\"branch\">\r\n                    <value>\r\n                      <list>\r\n                        <option value=\"refactor/refactoring-with-gradle\" />\r\n                      </list>\r\n                    </value>\r\n                  </entry>\r\n                </map>\r\n              </option>\r\n            </State>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"refacto: Gradle refacto ?\" />\r\n    <MESSAGE value=\"refacto: Gradle refacto fonctionnel\" />\r\n    <MESSAGE value=\"refacto: Tests unitaires fonctionnels\" />\r\n    <MESSAGE value=\"refacto: Tests unitaires fonctionnels sur quasiment tous les breaks\" />\r\n    <MESSAGE value=\"refacto: Tests unitaires TOUS fonctionnels\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"refacto: Tests unitaires TOUS fonctionnels\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java</url>\r\n          <line>54</line>\r\n          <option name=\"timeStamp\" value=\"1\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/dbg/event/MethodEntryEventHandler.java</url>\r\n          <line>23</line>\r\n          <option name=\"timeStamp\" value=\"5\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/dbg/event/MethodEntryEventHandler.java</url>\r\n          <line>22</line>\r\n          <option name=\"timeStamp\" value=\"6\" />\r\n        </line-breakpoint>\r\n        <line-breakpoint enabled=\"true\" type=\"java-line\">\r\n          <url>file://$PROJECT_DIR$/src/main/java/dbg/command/BreakBeforeMethodCallCommand.java</url>\r\n          <line>19</line>\r\n          <option name=\"timeStamp\" value=\"7\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision bcb039b9c92b954fa3bfafee17ec8c4a1c5ca296)
++++ b/.idea/workspace.xml	(date 1738856339776)
+@@ -97,6 +97,7 @@
+     "Gradle.ScriptableDebuggerTest.testContinueCommand.executor": "Run",
+     "Gradle.ScriptableDebuggerTest.testStepCommand.executor": "Run",
+     "Gradle.ScriptableDebuggerTest.testStepOverCommand.executor": "Run",
++    "Gradle.jdi-debugger-impl [:dbg.DebuggerMain.main()].executor": "Run",
+     "Gradle.jdi-debugger-impl [:dbg.JDISimpleDebugger.main()].executor": "Run",
+     "Gradle.jdi-debugger-impl [:dbg.JDISimpleDebuggerMain.main()].executor": "Run",
+     "JUnit.tests.executor": "Run",
+@@ -105,14 +106,30 @@
+     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+     "git-widget-placeholder": "refactor/refactoring-with-gradle",
+     "ignore.virus.scanning.warn.message": "true",
+-    "last_opened_file_path": "C:/Users/darwh/OneDrive/UBO_Travail/Semestre_10/Industrialisation du logiciel/jdi-debugger-impl/out/production/classes",
++    "last_opened_file_path": "C:/Users/darwh/OneDrive/UBO_Travail/Semestre_10/Industrialisation du logiciel/jdi-debugger-impl/out/production/classes/dbg",
+     "node.js.detected.package.eslint": "true",
+     "node.js.selected.package.eslint": "(autodetect)",
+     "nodejs_package_manager_path": "npm",
+     "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
+   }
+ }]]></component>
+-  <component name="RunManager" selected="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand">
++  <component name="RunManager" selected="Application.DebuggerMain">
++    <configuration name="DebuggerMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="ALTERNATIVE_JRE_PATH" value="21" />
++      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
++      <option name="MAIN_CLASS_NAME" value="dbg.DebuggerMain" />
++      <module name="jdi-debugger-impl.main" />
++      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/out/production/classes" />
++      <extension name="coverage">
++        <pattern>
++          <option name="PATTERN" value="dbg.*" />
++          <option name="ENABLED" value="true" />
++        </pattern>
++      </extension>
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
+     <configuration name="ScriptableDebuggerTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+       <ExternalSystemSettings>
+         <option name="executionName" />
+@@ -161,30 +178,6 @@
+       <RunAsTest>true</RunAsTest>
+       <method v="2" />
+     </configuration>
+-    <configuration name="ScriptableDebuggerTest.testBreakOnCountCommand" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+-      <ExternalSystemSettings>
+-        <option name="executionName" />
+-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-        <option name="externalSystemIdString" value="GRADLE" />
+-        <option name="scriptParameters" value="" />
+-        <option name="taskDescriptions">
+-          <list />
+-        </option>
+-        <option name="taskNames">
+-          <list>
+-            <option value=":test" />
+-            <option value="--tests" />
+-            <option value="&quot;dbg.ScriptableDebuggerTest.testBreakOnCountCommand&quot;" />
+-          </list>
+-        </option>
+-        <option name="vmOptions" />
+-      </ExternalSystemSettings>
+-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
+-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+-      <DebugAllEnabled>false</DebugAllEnabled>
+-      <RunAsTest>true</RunAsTest>
+-      <method v="2" />
+-    </configuration>
+     <configuration name="ScriptableDebuggerTest.testStepCommand" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+       <ExternalSystemSettings>
+         <option name="executionName" />
+@@ -235,8 +228,8 @@
+     </configuration>
+     <list>
+       <item itemvalue="Application.JDISimpleDebugger" />
++      <item itemvalue="Application.DebuggerMain" />
+       <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand" />
+-      <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakOnCountCommand" />
+       <item itemvalue="Gradle.ScriptableDebuggerTest.testStepCommand" />
+       <item itemvalue="Gradle.ScriptableDebuggerTest.testStepOverCommand" />
+       <item itemvalue="Gradle.ScriptableDebuggerTest" />
+@@ -244,11 +237,11 @@
+     </list>
+     <recent_temporary>
+       <list>
++        <item itemvalue="Application.DebuggerMain" />
+         <item itemvalue="Gradle.ScriptableDebuggerTest" />
+         <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand" />
+         <item itemvalue="Gradle.ScriptableDebuggerTest.testStepOverCommand" />
+         <item itemvalue="Gradle.ScriptableDebuggerTest.testStepCommand" />
+-        <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakOnCountCommand" />
+       </list>
+     </recent_temporary>
+   </component>
+@@ -269,7 +262,7 @@
+       <option name="presentableId" value="Default" />
+       <updated>1738846641527</updated>
+       <workItem from="1738846644888" duration="641000" />
+-      <workItem from="1738847304737" duration="4977000" />
++      <workItem from="1738847304737" duration="7467000" />
+     </task>
+     <task id="LOCAL-00001" summary="refacto: Gradle refacto fonctionnel">
+       <option name="closed" value="true" />
+@@ -295,7 +288,23 @@
+       <option name="project" value="LOCAL" />
+       <updated>1738851512080</updated>
+     </task>
+-    <option name="localTasksCounter" value="4" />
++    <task id="LOCAL-00004" summary="refacto: Tests unitaires TOUS fonctionnels">
++      <option name="closed" value="true" />
++      <created>1738852342004</created>
++      <option name="number" value="00004" />
++      <option name="presentableId" value="LOCAL-00004" />
++      <option name="project" value="LOCAL" />
++      <updated>1738852342004</updated>
++    </task>
++    <task id="LOCAL-00005" summary="refacto: Suppressions fichiers inutiles">
++      <option name="closed" value="true" />
++      <created>1738852642509</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1738852642509</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -330,7 +339,8 @@
+     <MESSAGE value="refacto: Tests unitaires fonctionnels" />
+     <MESSAGE value="refacto: Tests unitaires fonctionnels sur quasiment tous les breaks" />
+     <MESSAGE value="refacto: Tests unitaires TOUS fonctionnels" />
+-    <option name="LAST_COMMIT_MESSAGE" value="refacto: Tests unitaires TOUS fonctionnels" />
++    <MESSAGE value="refacto: Suppressions fichiers inutiles" />
++    <option name="LAST_COMMIT_MESSAGE" value="refacto: Suppressions fichiers inutiles" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
+Index: src/main/java/dbg/DebuggerMain.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/dbg/DebuggerMain.java b/src/main/java/dbg/DebuggerMain.java
+new file mode 100644
+--- /dev/null	(date 1738853327350)
++++ b/src/main/java/dbg/DebuggerMain.java	(date 1738853327350)
+@@ -0,0 +1,14 @@
++package dbg;
++
++import dbg.ui.GUIDebuggerUI;
++
++public class DebuggerMain {
++  public static void main(String[] args) {
++    // Instanciation de l'UI GUI
++    GUIDebuggerUI ui = new GUIDebuggerUI();
++    // Création du débogueur avec cette UI
++    ScriptableDebugger debugger = new ScriptableDebugger(ui);
++    // Attache le débogueur à la classe cible (votre debuggee)
++    debugger.attachTo(JDISimpleDebuggee.class);
++  }
++}

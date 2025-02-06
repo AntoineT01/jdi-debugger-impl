@@ -1,5 +1,6 @@
 package dbg.graphic.model;
 
+import dbg.DebuggerSession;
 import dbg.command.DebuggerContext;
 import java.util.*;
 
@@ -9,7 +10,6 @@ public class DebuggerModel extends Observable {
   private List<String> callStack;
   private Map<String, String> variables;
   private final List<Breakpoint> breakpoints;
-  private DebuggerContext currentDebuggerContext;
 
   public DebuggerModel() {
     callStack = new ArrayList<>();
@@ -21,12 +21,11 @@ public class DebuggerModel extends Observable {
    * Met à jour l'état global du débogueur (source, ligne courante, pile, variables)
    * et le contexte courant.
    */
-  public void updateState(String sourceCode, int line, List<String> stack, Map<String, String> vars, DebuggerContext context) {
+  public void updateState(String sourceCode, int line, List<String> stack, Map<String, String> vars) {
     this.currentSourceCode = sourceCode;
     this.currentLine = line;
     this.callStack = stack;
     this.variables = vars;
-    this.currentDebuggerContext = context;
     setChanged();
     notifyObservers();
   }
@@ -55,11 +54,10 @@ public class DebuggerModel extends Observable {
    * Retourne le contexte courant (VM, thread, frame) utilisé pour l'exécution des commandes.
    */
   public DebuggerContext getCurrentDebuggerContext() {
-    return currentDebuggerContext;
+    return DebuggerSession.getContext();
   }
 
-  public void setCurrentDebuggerContext(DebuggerContext context) {
-    this.currentDebuggerContext = context;
+  public void setCurrentDebuggerContext() {
     setChanged();
     notifyObservers();
   }
