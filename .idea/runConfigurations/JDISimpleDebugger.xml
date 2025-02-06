@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="JDISimpleDebugger" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="dbg.JDISimpleDebugger" />
-    <module name="jdi-debugger-impl" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/out/production/jdi-debugger-impl" />
+    <module name="jdi-debugger-impl.main" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/out/production/classes" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="dbg.*" />
