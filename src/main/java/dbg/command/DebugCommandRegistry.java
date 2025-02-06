@@ -25,6 +25,9 @@ public class DebugCommandRegistry {
     commands.put("break-once", new BreakOnceCommand());
     commands.put("break-on-count", new BreakOnCountCommand());
     commands.put("break-before-method-call", new BreakBeforeMethodCallCommand());
+    // Time Travel
+    commands.put("step-back", new StepBackCommand());
+    commands.put("step-back-n", new StepBackNCommand());
   }
 
   public DebugCommand getCommand(String name) {

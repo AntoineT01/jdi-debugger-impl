@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScriptableDebugger {
+  private DebuggerContext debuggerContext;
+
 
   private Class<?> debugClass;
   private VirtualMachine vm;
@@ -100,37 +102,44 @@ public class ScriptableDebugger {
    * via le CommandDispatcher qui renvoie une chaîne commençant par "RESUME:" ou, explicitement, la commande "continue".
    */
   public boolean waitForUser(ThreadReference thread, EventSet eventSet) {
-    // Pour les UI non bloquantes (ex. GUI), reprendre immédiatement.
     if (!ui.isBlocking()) {
       return true;
     }
-    boolean resumeRequested = false;
-    while (!resumeRequested) {
-      StackFrame frame;
-      try {
-        frame = thread.frame(0);
-      } catch (IncompatibleThreadStateException e) {
-        ui.showOutput("Impossible de récupérer la frame courante. Le thread n'est peut-être plus suspendu.");
-        return true;
+
+    try {
+      if (debuggerContext == null) {
+        debuggerContext = new DebuggerContext(vm, thread, thread.frame(0));
+      } else {
+        debuggerContext.setCurrentThread(thread);
+        debuggerContext.setCurrentFrame(thread.frame(0));
       }
-      DebuggerContext context = new DebuggerContext(vm, thread, frame);
-      String command = ui.getCommand(context);
+
+      String command = ui.getCommand(debuggerContext);
       if (command == null || command.trim().isEmpty()) {
         ui.showOutput("Veuillez taper une commande.");
-        continue;
+        return false;
       }
+
       CommandDispatcher dispatcher = new CommandDispatcher();
-      Object result = dispatcher.dispatchCommand(context, command);
+      Object result = dispatcher.dispatchCommand(debuggerContext, command);
+
       if (result != null) {
         String resStr = result.toString();
         ui.showOutput(resStr);
-        if (resStr.startsWith("RESUME:")) {
-          resumeRequested = true;
+        if (resStr.startsWith("RESTART:")) {
+          // Redémarrer la VM
+          vm.exit(0);
+          attachTo(debugClass);
+          return false;
         }
+        return resStr.startsWith("RESUME:");
       }
+    } catch (Exception e) {
+      ui.showOutput("Erreur: " + e.getMessage());
     }
-    return resumeRequested;
+    return false;
   }
+
 
   public void startDebugger() throws VMDisconnectedException, InterruptedException {
     EventQueue eventQueue = vm.eventQueue();
