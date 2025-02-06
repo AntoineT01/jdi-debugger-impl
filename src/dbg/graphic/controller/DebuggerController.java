@@ -133,4 +133,9 @@ public class DebuggerController implements DebuggerUI {
   public String getCommand(DebuggerContext context) {
     return "";
   }
+
+  @Override
+  public boolean isBlocking() {
+    return false;
+  }
 }

@@ -1,39 +1,19 @@
 package dbg;
 
-import com.sun.jdi.AbsentInformationException;
-import com.sun.jdi.Bootstrap;
-import com.sun.jdi.IncompatibleThreadStateException;
-import com.sun.jdi.Location;
-import com.sun.jdi.ReferenceType;
-import com.sun.jdi.StackFrame;
-import com.sun.jdi.ThreadReference;
-import com.sun.jdi.VMDisconnectedException;
-import com.sun.jdi.VirtualMachine;
-import com.sun.jdi.connect.Connector;
-import com.sun.jdi.connect.IllegalConnectorArgumentsException;
-import com.sun.jdi.connect.LaunchingConnector;
-import com.sun.jdi.connect.VMStartException;
-import com.sun.jdi.event.BreakpointEvent;
-import com.sun.jdi.event.ClassPrepareEvent;
-import com.sun.jdi.event.Event;
-import com.sun.jdi.event.EventQueue;
-import com.sun.jdi.event.EventSet;
-import com.sun.jdi.event.MethodEntryEvent;
-import com.sun.jdi.event.VMDisconnectEvent;
-import com.sun.jdi.event.VMStartEvent;
-import com.sun.jdi.request.BreakpointRequest;
-import com.sun.jdi.request.ClassPrepareRequest;
-import com.sun.jdi.request.EventRequest;
-import com.sun.jdi.request.EventRequestManager;
+import com.sun.jdi.*;
+import com.sun.jdi.connect.*;
+import com.sun.jdi.event.*;
+import com.sun.jdi.request.*;
 import dbg.command.CommandDispatcher;
 import dbg.command.DebuggerContext;
-import dbg.ui.CLIDebuggerUI;
+import dbg.event.*;
 import dbg.ui.DebuggerUI;
+import dbg.ui.CLIDebuggerUI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ScriptableDebugger {
@@ -41,14 +21,26 @@ public class ScriptableDebugger {
   private Class<?> debugClass;
   private VirtualMachine vm;
   private DebuggerUI ui;
+  private Map<Class<? extends Event>, DebuggerEventHandler> eventHandlers;
 
-  public ScriptableDebugger() {
-    this.ui = new CLIDebuggerUI();
-  }
-
-  // Possibilité d'injecter une autre implémentation de UI
+  // Constructeur avec UI personnalisée
   public ScriptableDebugger(DebuggerUI ui) {
     this.ui = ui;
+    this.eventHandlers = new HashMap<>();
+    registerEventHandlers();
+  }
+
+  // Constructeur par défaut utilisant le mode CLI
+  public ScriptableDebugger() {
+    this(new CLIDebuggerUI());
+  }
+
+  private void registerEventHandlers() {
+    eventHandlers.put(VMStartEvent.class, new VMStartEventHandler(ui));
+    eventHandlers.put(ClassPrepareEvent.class, new ClassPrepareEventHandler(ui));
+    eventHandlers.put(BreakpointEvent.class, new BreakpointEventHandler(ui));
+    eventHandlers.put(MethodEntryEvent.class, new MethodEntryEventHandler(ui));
+    eventHandlers.put(VMDisconnectEvent.class, new VMDisconnectEventHandler(ui));
   }
 
   public VirtualMachine connectAndLaunchVM() throws IOException, IllegalConnectorArgumentsException, VMStartException {
@@ -66,12 +58,8 @@ public class ScriptableDebugger {
       startOutputReader();
       enableClassPrepareRequest();
       startDebugger();
-    } catch (VMStartException e) {
-      e.printStackTrace();
-      ui.showOutput(e.toString());
-    } catch (VMDisconnectedException e) {
-      ui.showOutput("Virtual Machine is disconnected: " + e);
     } catch (Exception e) {
+      ui.showOutput("Erreur lors de l'attachement : " + e.getMessage());
       e.printStackTrace();
     }
   }
@@ -85,29 +73,9 @@ public class ScriptableDebugger {
     ui.showOutput("ClassPrepareRequest activée pour " + debugClass.getName());
   }
 
-  private void setBreakPoint(ReferenceType refType, int lineNumber) {
-    try {
-      List<Location> locations = refType.locationsOfLine(lineNumber);
-      if (!locations.isEmpty()) {
-        Location location = locations.get(0);
-        EventRequestManager erm = vm.eventRequestManager();
-        BreakpointRequest bpReq = erm.createBreakpointRequest(location);
-        bpReq.setSuspendPolicy(EventRequest.SUSPEND_ALL);
-        bpReq.enable();
-        ui.showOutput("Breakpoint installé dans " + refType.name() + " à la ligne " + lineNumber);
-      } else {
-        ui.showOutput("Aucune instruction trouvée à la ligne " + lineNumber + " dans " + refType.name());
-      }
-    } catch (AbsentInformationException e) {
-      ui.showOutput("Informations de debug absentes pour " + refType.name());
-    }
-  }
-
   private void startOutputReader() {
     new Thread(() -> {
-      try {
-        InputStreamReader isr = new InputStreamReader(vm.process().getInputStream());
-        BufferedReader br = new BufferedReader(isr);
+      try (BufferedReader br = new BufferedReader(new InputStreamReader(vm.process().getInputStream()))) {
         String line;
         while ((line = br.readLine()) != null) {
           ui.showOutput("\nTarget VM: " + line + "\n");
@@ -119,10 +87,21 @@ public class ScriptableDebugger {
   }
 
   /**
-   * Attend une commande de l'utilisateur dans le contexte donné et renvoie true
-   * si la commande indique de reprendre (c'est-à-dire, si le résultat commence par "RESUME:").
+   * Attend une commande de l'utilisateur.
+   * En mode CLI (ui.isBlocking()==true), cette méthode lit en boucle jusqu'à obtenir la commande "continue" (peu importe la casse)
+   * ou une commande via le CommandDispatcher qui renvoie une chaîne commençant par "RESUME:".
+   * En mode GUI, elle retourne immédiatement, car l'action se fait via des boutons.
    */
-  private boolean waitForUserCommand(ThreadReference thread) {
+  /**
+   * Attend une commande de l'utilisateur.
+   * En mode CLI (ui.isBlocking()==true), cette méthode lit en boucle jusqu'à obtenir une commande
+   * via le CommandDispatcher qui renvoie une chaîne commençant par "RESUME:" ou, explicitement, la commande "continue".
+   */
+  public boolean waitForUser(ThreadReference thread, EventSet eventSet) {
+    // Pour les UI non bloquantes (ex. GUI), reprendre immédiatement.
+    if (!ui.isBlocking()) {
+      return true;
+    }
     boolean resumeRequested = false;
     while (!resumeRequested) {
       StackFrame frame;
@@ -138,7 +117,6 @@ public class ScriptableDebugger {
         ui.showOutput("Veuillez taper une commande.");
         continue;
       }
-      // Le dispatcher traite la commande saisie et renvoie un résultat
       CommandDispatcher dispatcher = new CommandDispatcher();
       Object result = dispatcher.dispatchCommand(context, command);
       if (result != null) {
@@ -146,6 +124,7 @@ public class ScriptableDebugger {
         ui.showOutput(resStr);
         if (resStr.startsWith("RESUME:")) {
           resumeRequested = true;
+          eventSet.resume();
         }
       }
     }
@@ -159,83 +138,31 @@ public class ScriptableDebugger {
       EventSet eventSet = eventQueue.remove();
       for (Event event : eventSet) {
         ui.showOutput(">> " + event);
-        if (event instanceof VMStartEvent) {
-          ui.showOutput("La VM a démarré.");
+        DebuggerEventHandler handler = getHandlerForEvent(event);
+        if (handler != null) {
+          handler.handle(event, eventSet, this);
+        } else {
           eventSet.resume();
-        } else if (event instanceof ClassPrepareEvent cpEvent) {
-          ReferenceType refType = cpEvent.referenceType();
-          ui.showOutput("Classe préparée: " + refType.name());
-          // Pour test
-//          if (refType.name().equals(debugClass.getName())) {
-//            // Par exemple, on installe un breakpoint à la ligne 11 (adaptable)
-//            setBreakPoint(refType, 11);
-//          }
-//          eventSet.resume();
-          if (waitForUserCommand(cpEvent.thread())) {
-            eventSet.resume();
-          }
-        } else if (event instanceof BreakpointEvent bpEvent) {
-          ui.showOutput("Breakpoint atteint à: " + bpEvent.location());
-
-          Object targetObj = bpEvent.request().getProperty("breakOnCount");
-          if (targetObj != null) {
-            int targetCount = (Integer) targetObj;
-            Object currentObj = bpEvent.request().getProperty("currentHitCount");
-            int currentHit = (currentObj == null) ? 0 : (Integer) currentObj;
-            currentHit++;
-            bpEvent.request().putProperty("currentHitCount", currentHit);
-            System.out.println("Hit count for this breakpoint: " + currentHit);
-            // Si ce n'est pas un multiple du seuil, reprendre automatiquement
-            if (currentHit % targetCount != 0) {
-              System.out.println("Breakpoint reached but not on target count (" + targetCount + "). Resuming automatically.");
-              eventSet.resume();
-              continue;
-            } else {
-              System.out.println("Breakpoint reached on target count (" + targetCount + ").");
-              bpEvent.request().putProperty("breakOnCount", null);
-            }
-          }
-
-          // Vérifier si c'est un breakpoint one-shot (break-once)
-          Object onceObj = bpEvent.request().getProperty("breakOnce");
-          if (onceObj != null && (Boolean) onceObj) {
-            bpEvent.request().disable();
-            vm.eventRequestManager().deleteEventRequest(bpEvent.request());
-            ui.showOutput("One-shot breakpoint removed after being hit.");
-            if (waitForUserCommand(bpEvent.thread())) {
-              eventSet.resume();
-            }
-            continue;
-          }
-
-          if (waitForUserCommand(bpEvent.thread())) {
-            eventSet.resume();
-          }
-        } else if (event instanceof MethodEntryEvent meEvent) {
-          Object targetMethodObj = meEvent.request().getProperty("targetMethod");
-          if (targetMethodObj != null) {
-            String targetMethod = targetMethodObj.toString();
-            String currentMethod = meEvent.location().method().name();
-            if (currentMethod.equals(targetMethod)) {
-              System.out.println("MethodEntryEvent: Break-before-method-call reached for method: " + currentMethod);
-              if (waitForUserCommand(meEvent.thread())) {
-                eventSet.resume();
-              }
-            } else {
-              // Ce n'est pas la méthode recherchée, reprendre immédiatement
-              eventSet.resume();
-            }
-          } else {
-            // Pas un événement lié à break-before-method-call, reprendre
-            eventSet.resume();
-          }
-        } else if (event instanceof VMDisconnectEvent) {
-          ui.showOutput("La VM est déconnectée. Fin du debug.");
+        }
+        if (event instanceof VMDisconnectEvent) {
           debugging = false;
-          eventSet.resume();
+          break;
         }
       }
     }
-    ui.showOutput("End of program");
+    ui.showOutput("Fin du débogage.");
+  }
+
+  private DebuggerEventHandler getHandlerForEvent(Event event) {
+    DebuggerEventHandler handler = eventHandlers.get(event.getClass());
+    if (handler == null) {
+      for (Map.Entry<Class<? extends Event>, DebuggerEventHandler> entry : eventHandlers.entrySet()) {
+        if (entry.getKey().isInstance(event)) {
+          handler = entry.getValue();
+          break;
+        }
+      }
+    }
+    return handler;
   }
 }

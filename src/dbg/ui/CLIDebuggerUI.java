@@ -1,11 +1,16 @@
 package dbg.ui;
 
 import dbg.command.DebuggerContext;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * Implémentation en mode CLI de l'interface DebuggerUI.
+ */
 public class CLIDebuggerUI implements DebuggerUI {
+
   private final BufferedReader reader;
 
   public CLIDebuggerUI() {
@@ -13,18 +18,23 @@ public class CLIDebuggerUI implements DebuggerUI {
   }
 
   @Override
-  public void showOutput(String message) {
-    System.out.println(message);
+  public void showOutput(String output) {
+    System.out.println(output);
   }
 
   @Override
   public String getCommand(DebuggerContext context) {
-    System.out.print("dbg> ");
-    System.out.flush();
+    System.out.print("Commande > ");
     try {
       return reader.readLine();
     } catch (IOException e) {
-      return "";
+      showOutput("Erreur de lecture de commande: " + e.getMessage());
+      return null;
     }
+  }
+
+  @Override
+  public boolean isBlocking() {
+    return true;
   }
 }
