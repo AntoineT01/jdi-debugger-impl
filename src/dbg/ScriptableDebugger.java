@@ -19,7 +19,6 @@ import com.sun.jdi.event.Event;
 import com.sun.jdi.event.EventQueue;
 import com.sun.jdi.event.EventSet;
 import com.sun.jdi.event.MethodEntryEvent;
-import com.sun.jdi.event.StepEvent;
 import com.sun.jdi.event.VMDisconnectEvent;
 import com.sun.jdi.event.VMStartEvent;
 import com.sun.jdi.request.BreakpointRequest;
@@ -167,35 +166,71 @@ public class ScriptableDebugger {
         } else if (event instanceof ClassPrepareEvent cpEvent) {
           ReferenceType refType = cpEvent.referenceType();
           ui.showOutput("Classe préparée: " + refType.name());
-          if (refType.name().equals(debugClass.getName())) {
-            // Par exemple, on installe un breakpoint à la ligne 11 (adaptable)
-            setBreakPoint(refType, 11);
+//          if (refType.name().equals(debugClass.getName())) {
+//            // Par exemple, on installe un breakpoint à la ligne 11 (adaptable)
+//            setBreakPoint(refType, 11);
+//          }
+//          eventSet.resume();
+          if (waitForUserCommand(cpEvent.thread())) {
+            eventSet.resume();
           }
-          eventSet.resume();
         } else if (event instanceof BreakpointEvent bpEvent) {
           ui.showOutput("Breakpoint atteint à: " + bpEvent.location());
+
+          Object targetObj = bpEvent.request().getProperty("breakOnCount");
+          if (targetObj != null) {
+            int targetCount = (Integer) targetObj;
+            Object currentObj = bpEvent.request().getProperty("currentHitCount");
+            int currentHit = (currentObj == null) ? 0 : (Integer) currentObj;
+            currentHit++;
+            bpEvent.request().putProperty("currentHitCount", currentHit);
+            System.out.println("Hit count for this breakpoint: " + currentHit);
+            // Si ce n'est pas un multiple du seuil, reprendre automatiquement
+            if (currentHit % targetCount != 0) {
+              System.out.println("Breakpoint reached but not on target count (" + targetCount + "). Resuming automatically.");
+              eventSet.resume();
+              continue;
+            } else {
+              System.out.println("Breakpoint reached on target count (" + targetCount + ").");
+              bpEvent.request().putProperty("breakOnCount", null);
+            }
+          }
+
+          // Vérifier si c'est un breakpoint one-shot (break-once)
+          Object onceObj = bpEvent.request().getProperty("breakOnce");
+          if (onceObj != null && (Boolean) onceObj) {
+            // Désactiver et supprimer le breakpoint one-shot afin qu'il ne se déclenche plus
+            bpEvent.request().disable();
+            vm.eventRequestManager().deleteEventRequest(bpEvent.request());
+            ui.showOutput("One-shot breakpoint removed after being hit.");
+            // On peut choisir de ne pas attendre de commande ici, ou bien d'attendre si nécessaire.
+            if (waitForUserCommand(bpEvent.thread())) {
+              eventSet.resume();
+            }
+            continue; // Passer à l'itération suivante (le breakpoint ne doit plus se déclencher)
+          }
+
+          // Pour les autres breakpoints, attendre une commande de reprise
           if (waitForUserCommand(bpEvent.thread())) {
             eventSet.resume();
           }
-        } else if (event instanceof StepEvent stepEvent) {
-          ui.showOutput("StepEvent à: " + stepEvent.location());
-          if (waitForUserCommand(stepEvent.thread())) {
-            eventSet.resume();
-          }
         } else if (event instanceof MethodEntryEvent meEvent) {
+          // Vérifier si ce MethodEntryEvent correspond au break-before-method-call
           Object targetMethodObj = meEvent.request().getProperty("targetMethod");
           if (targetMethodObj != null) {
             String targetMethod = targetMethodObj.toString();
             String currentMethod = meEvent.location().method().name();
             if (currentMethod.equals(targetMethod)) {
-              ui.showOutput("MethodEntryEvent: Break-before-method-call reached for method: " + currentMethod);
+              System.out.println("MethodEntryEvent: Break-before-method-call reached for method: " + currentMethod);
               if (waitForUserCommand(meEvent.thread())) {
                 eventSet.resume();
               }
             } else {
+              // Ce n'est pas la méthode recherchée, reprendre immédiatement
               eventSet.resume();
             }
           } else {
+            // Pas un événement lié à break-before-method-call, reprendre
             eventSet.resume();
           }
         } else if (event instanceof VMDisconnectEvent) {
