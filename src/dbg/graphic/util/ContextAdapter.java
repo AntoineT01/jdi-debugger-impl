@@ -7,7 +7,7 @@ public class ContextAdapter {
   public static DebuggerContext adapt(dbg.graphic.model.DebuggerContext guiContext) {
     if (guiContext == null) return null;
     return new DebuggerContext(
-      guiContext.getVM(),
+      guiContext.getVm(),
       guiContext.getThread(),
       guiContext.getCurrentFrame()
     );

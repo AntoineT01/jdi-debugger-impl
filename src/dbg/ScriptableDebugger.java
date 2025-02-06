@@ -96,12 +96,10 @@ public class ScriptableDebugger {
             if (evt.referenceType().name().equals(debugClass.getName())) {
               setBreakPoint(evt.referenceType(), 6);
             }
-          }
-          else if (event instanceof BreakpointEvent || event instanceof StepEvent) {
+          } else if (event instanceof BreakpointEvent || event instanceof StepEvent) {
             shouldResume = false;
             suspended.set(true);
-          }
-          else if (event instanceof VMDisconnectEvent) {
+          } else if (event instanceof VMDisconnectEvent) {
             connected = false;
           }
 

@@ -1,10 +1,12 @@
 package dbg.graphic.util;
 
 import com.sun.jdi.*;
-import com.sun.jdi.event.*;
-import com.sun.jdi.request.*;
+import com.sun.jdi.event.Event;
+import com.sun.jdi.event.LocatableEvent;
 import dbg.graphic.model.DebuggerContext;
+
 import java.util.*;
+import java.util.List;
 
 public class ContextUpdater {
   public static DebuggerContext createContext(Event event) {

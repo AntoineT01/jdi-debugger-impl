@@ -1,5 +1,6 @@
 package dbg.graphic.controller;
 
+import com.sun.jdi.*;
 import com.sun.jdi.event.*;
 import dbg.ScriptableDebugger;
 import dbg.command.*;
@@ -70,18 +71,15 @@ public class DebuggerController {
       if (event instanceof VMStartEvent) {
         System.out.println("VM started");
         model.updateState(sourceCode, -1, new ArrayList<>(), new HashMap<>());
-      }
-      else if (event instanceof ClassPrepareEvent) {
+      } else if (event instanceof ClassPrepareEvent) {
         System.out.println("Class prepared");
         model.updateState(sourceCode, -1, new ArrayList<>(), new HashMap<>());
-      }
-      else if (event instanceof BreakpointEvent || event instanceof StepEvent) {
+      } else if (event instanceof BreakpointEvent || event instanceof StepEvent) {
         currentContext = ContextUpdater.createContext(event);
         if (currentContext != null) {
           updateModelState();
         }
-      }
-      else if (event instanceof VMDeathEvent || event instanceof VMDisconnectEvent) {
+      } else if (event instanceof VMDeathEvent || event instanceof VMDisconnectEvent) {
         currentContext = null;
         model.updateState(sourceCode + "\n// Program terminated", -1, new ArrayList<>(), new HashMap<>());
       }

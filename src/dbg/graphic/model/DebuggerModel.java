@@ -59,4 +59,8 @@ public class DebuggerModel extends Observable {
   public List<Breakpoint> getBreakpoints() { return breakpoints; }
   public String getLastCommandResult() { return lastCommandResult; }
   public boolean isRunning() { return isRunning; }
+
+  public void setCommandResult(String s) {
+    lastCommandResult = s;
+  }
 }
