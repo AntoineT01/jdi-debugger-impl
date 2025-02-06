@@ -24,6 +24,4 @@ public class DebuggerContext {
   public StackFrame getCurrentFrame() {
     return currentFrame;
   }
-
-  // Vous pouvez ajouter d'autres getters/setters au besoin
 }

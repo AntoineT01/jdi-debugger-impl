@@ -42,7 +42,6 @@ public class ScriptableDebugger {
   private VirtualMachine vm;
   private DebuggerUI ui;
 
-  // Par défaut, nous utilisons l'implémentation CLI
   public ScriptableDebugger() {
     this.ui = new CLIDebuggerUI();
   }
@@ -166,6 +165,7 @@ public class ScriptableDebugger {
         } else if (event instanceof ClassPrepareEvent cpEvent) {
           ReferenceType refType = cpEvent.referenceType();
           ui.showOutput("Classe préparée: " + refType.name());
+          // Pour test
 //          if (refType.name().equals(debugClass.getName())) {
 //            // Par exemple, on installe un breakpoint à la ligne 11 (adaptable)
 //            setBreakPoint(refType, 11);
@@ -199,23 +199,19 @@ public class ScriptableDebugger {
           // Vérifier si c'est un breakpoint one-shot (break-once)
           Object onceObj = bpEvent.request().getProperty("breakOnce");
           if (onceObj != null && (Boolean) onceObj) {
-            // Désactiver et supprimer le breakpoint one-shot afin qu'il ne se déclenche plus
             bpEvent.request().disable();
             vm.eventRequestManager().deleteEventRequest(bpEvent.request());
             ui.showOutput("One-shot breakpoint removed after being hit.");
-            // On peut choisir de ne pas attendre de commande ici, ou bien d'attendre si nécessaire.
             if (waitForUserCommand(bpEvent.thread())) {
               eventSet.resume();
             }
-            continue; // Passer à l'itération suivante (le breakpoint ne doit plus se déclencher)
+            continue;
           }
 
-          // Pour les autres breakpoints, attendre une commande de reprise
           if (waitForUserCommand(bpEvent.thread())) {
             eventSet.resume();
           }
         } else if (event instanceof MethodEntryEvent meEvent) {
-          // Vérifier si ce MethodEntryEvent correspond au break-before-method-call
           Object targetMethodObj = meEvent.request().getProperty("targetMethod");
           if (targetMethodObj != null) {
             String targetMethod = targetMethodObj.toString();

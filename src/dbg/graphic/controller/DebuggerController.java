@@ -3,8 +3,9 @@ package dbg.graphic.controller;
 import dbg.command.CommandDispatcher;
 import dbg.command.DebuggerContext;
 import dbg.graphic.model.DebuggerModel;
+import dbg.ui.DebuggerUI;
 
-public class DebuggerController {
+public class DebuggerController implements DebuggerUI {
   private final DebuggerModel model;
   private final CommandDispatcher dispatcher;
 
@@ -121,5 +122,15 @@ public class DebuggerController {
     DebuggerContext context = getContext();
     Object result = dispatcher.dispatchCommand(context, "break-before-method-call " + methodName);
     System.out.println(result);
+  }
+
+  @Override
+  public void showOutput(String message) {
+
+  }
+
+  @Override
+  public String getCommand(DebuggerContext context) {
+    return "";
   }
 }
