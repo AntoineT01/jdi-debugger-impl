@@ -41,6 +41,7 @@ public class ScriptableDebugger {
     eventHandlers.put(BreakpointEvent.class, new BreakpointEventHandler(ui));
     eventHandlers.put(MethodEntryEvent.class, new MethodEntryEventHandler(ui));
     eventHandlers.put(VMDisconnectEvent.class, new VMDisconnectEventHandler(ui));
+    eventHandlers.put(StepEvent.class, new StepEventHandler(ui));
   }
 
   public VirtualMachine connectAndLaunchVM() throws IOException, IllegalConnectorArgumentsException, VMStartException {
@@ -124,7 +125,6 @@ public class ScriptableDebugger {
         ui.showOutput(resStr);
         if (resStr.startsWith("RESUME:")) {
           resumeRequested = true;
-          eventSet.resume();
         }
       }
     }
@@ -140,7 +140,9 @@ public class ScriptableDebugger {
         ui.showOutput(">> " + event);
         DebuggerEventHandler handler = getHandlerForEvent(event);
         if (handler != null) {
-          handler.handle(event, eventSet, this);
+          if (handler.handle(event, eventSet, this)) {
+            eventSet.resume();
+          }
         } else {
           eventSet.resume();
         }

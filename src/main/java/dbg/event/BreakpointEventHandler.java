@@ -28,10 +28,10 @@ public class BreakpointEventHandler implements DebuggerEventHandler {
       bpEvent.request().putProperty("currentHitCount", currentHit);
       ui.showOutput("Hit count for this breakpoint: " + currentHit);
       if (currentHit % targetCount != 0) {
-        ui.showOutput("Breakpoint atteint mais pas sur le multiple ciblé (" + targetCount + "). Reprise automatique.");
+        ui.showOutput("Breakpoint atteint mais pas sur le nombre ciblé (" + targetCount + "). Reprise automatique.");
         return true;
       } else {
-        ui.showOutput("Breakpoint atteint sur le multiple ciblé (" + targetCount + ").");
+        ui.showOutput("Breakpoint atteint sur le nombre ciblé (" + targetCount + ").");
         bpEvent.request().putProperty("breakOnCount", null);
       }
     }

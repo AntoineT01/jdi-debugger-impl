@@ -15,7 +15,6 @@ public class VMStartEventHandler implements DebuggerEventHandler {
   @Override
   public boolean handle(Event event, EventSet eventSet, ScriptableDebugger debugger) {
     ui.showOutput("La VM a démarré.");
-    eventSet.resume();
     return true;
   }
 }

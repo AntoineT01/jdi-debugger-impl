@@ -30,4 +30,3 @@ public class MethodEntryEventHandler implements DebuggerEventHandler {
     return true;
   }
 }
-
