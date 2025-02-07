@@ -18,7 +18,12 @@ public class BreakpointEventHandler implements DebuggerEventHandler {
   @Override
   public boolean handle(Event event, EventSet eventSet, ScriptableDebugger debugger) {
     BreakpointEvent bpEvent = (BreakpointEvent) event;
+    DebuggerContext context = DebuggerSession.getContext();
     ui.showOutput("Breakpoint atteint à: " + bpEvent.location());
+
+    if (context.isInReplayMode() && context.shouldIgnoreBreakpoints()) {
+      return true; // Continue l'exécution sans s'arrêter
+    }
 
     // Gestion du hit count
     Object targetObj = bpEvent.request().getProperty("breakOnCount");

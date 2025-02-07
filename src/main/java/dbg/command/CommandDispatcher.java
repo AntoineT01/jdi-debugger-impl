@@ -1,5 +1,8 @@
 package dbg.command;
 
+import dbg.DebuggerSession;
+import dbg.state.ExecutionState;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -28,8 +31,8 @@ public class CommandDispatcher {
    * Exécute la commande utilisateur fournie sous forme de chaîne dans le contexte spécifié.
    */
   public Object dispatchCommand(DebuggerContext context, String commandLine) {
-    // Décomposer la ligne : le premier token est le nom de la commande, le reste sont les arguments.
     String[] tokens = commandLine.trim().split("\\s+");
+
     if (tokens.length == 0) {
       return null;
     }
@@ -41,6 +44,31 @@ public class CommandDispatcher {
     if (command == null) {
       return "Unknown command: " + cmdName;
     }
-    return command.execute(args, context);
+
+    // Exécuter la commande
+    Object result = command.execute(args, context);
+
+//    // Si la commande demande un redémarrage (comme step-back)
+//    if (result != null && result.toString().startsWith("RESTART:")) {
+//      // Récupérer l'état cible depuis le contexte
+//      ExecutionState targetState = context.getTargetState();
+//      if (targetState != null) {
+//        // Configurer le mode "replay" avec l'état cible
+//        context.setReplayMode(true);
+//        context.setReplayTargetState(targetState);
+//        // Signaler qu'il faut redémarrer jusqu'à cet état
+//        return "RESUME:REPLAY:" + targetState.getExecutionIndex();
+//      }
+//    }
+
+    if (result != null && result.toString().startsWith("RESTART:")) {
+      ExecutionState targetState = context.getTargetState();
+      if (targetState != null) {
+        DebuggerSession.startReplay(targetState);  // Ajout: configurer le replay au niveau session
+        return "RESUME:REPLAY:" + targetState.getExecutionIndex();
+      }
+    }
+
+    return result;
   }
 }

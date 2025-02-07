@@ -5,17 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6e43af01-702a-46b7-b907-75bce83714a7" name="Changes" comment="refacto: Tests unitaires TOUS fonctionnels">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/DebuggerMain.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/DebuggerMain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/DebuggerMain.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_06_02_2025_16_38__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_06_02_2025_16_38__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dbg/DebuggerSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/DebuggerSession.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/command/StepCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/StepCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/command/CommandDispatcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/CommandDispatcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/command/DebuggerContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/DebuggerContext.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/BreakpointEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/BreakpointEventHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/StepEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/StepEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/VMStartEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/VMStartEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/graphic/controller/DebuggerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/controller/DebuggerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/graphic/model/DebuggerModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/model/DebuggerModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/ui/GUIDebuggerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ui/GUIDebuggerUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +60,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -74,6 +74,9 @@
     &quot;accountId&quot;: &quot;70b2339c-808a-448a-9345-5cc5d6ad3cf2&quot;
   }
 }</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -86,36 +89,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.JDISimpleDebugger.executor": "Run",
-    "Gradle.ScriptableDebuggerTest.executor": "Run",
-    "Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand.executor": "Run",
-    "Gradle.ScriptableDebuggerTest.testBreakCommand.executor": "Run",
-    "Gradle.ScriptableDebuggerTest.testBreakOnCountCommand.executor": "Run",
-    "Gradle.ScriptableDebuggerTest.testBreakOnceCommand.executor": "Run",
-    "Gradle.ScriptableDebuggerTest.testContinueCommand (1).executor": "Run",
-    "Gradle.ScriptableDebuggerTest.testContinueCommand.executor": "Run",
-    "Gradle.ScriptableDebuggerTest.testStepCommand.executor": "Run",
-    "Gradle.ScriptableDebuggerTest.testStepOverCommand.executor": "Run",
-    "Gradle.jdi-debugger-impl [:dbg.DebuggerMain.main()].executor": "Run",
-    "Gradle.jdi-debugger-impl [:dbg.JDISimpleDebugger.main()].executor": "Run",
-    "Gradle.jdi-debugger-impl [:dbg.JDISimpleDebuggerMain.main()].executor": "Run",
-    "JUnit.tests.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feat/time-travel",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/darwh/OneDrive/UBO_Travail/Semestre_10/Industrialisation du logiciel/jdi-debugger-impl/out/production/classes",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.JDISimpleDebugger.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.testBreakCommand.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.testBreakOnCountCommand.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.testBreakOnceCommand.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.testContinueCommand (1).executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.testContinueCommand.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.testStepCommand.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.ScriptableDebuggerTest.testStepOverCommand.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.jdi-debugger-impl [:dbg.DebuggerMain.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.jdi-debugger-impl [:dbg.JDISimpleDebugger.main()].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.jdi-debugger-impl [:dbg.JDISimpleDebuggerMain.main()].executor&quot;: &quot;Run&quot;,
+    &quot;JUnit.tests.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feat/time-travel&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/darwh/OneDrive/UBO_Travail/Semestre_10/Industrialisation du logiciel/jdi-debugger-impl/out/production/classes&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.CommitDialog&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Application.DebuggerMain">
+}</component>
+  <component name="RunManager" selected="Application.JDISimpleDebugger">
     <configuration name="ScriptableDebuggerTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -315,11 +318,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java</url>
-          <line>54</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dbg/event/MethodEntryEventHandler.java</url>
           <line>23</line>
           <option name="timeStamp" value="5" />
@@ -333,11 +331,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/dbg/command/BreakBeforeMethodCallCommand.java</url>
           <line>19</line>
           <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java</url>
-          <line>150</line>
-          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
