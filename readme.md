@@ -1,5 +1,5 @@
 # Debugger JDI avec Time Travelling
- ~~***THOMAS Antoine*** - ***LE GOFF Tanguy***
+ ***THOMAS Antoine*** - ***LE GOFF Tanguy***
 
 **Note :** Ce fichier `README.md` concerne uniquement les commandes et le "time travel". Pour plus d'informations sur l'interface graphique (GUI), veuillez consulter la branche `feat/gui-ok`.
 
