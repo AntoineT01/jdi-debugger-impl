@@ -7,6 +7,7 @@
     <list default="true" id="6e43af01-702a-46b7-b907-75bce83714a7" name="Changes" comment="feat: Lien fonctionnel mais pas tout focntionne au niveau des commandes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/JDISimpleDebuggerMain.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +97,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feat/gui-ok",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/darwh/OneDrive/UBO_Travail/Semestre_10/Industrialisation du logiciel/jdi-debugger-impl/out/production/classes",
     "node.js.detected.package.eslint": "true",
@@ -106,6 +107,11 @@
     "settings.editor.selected.configurable": "project.propVCSSupport.CommitDialog"
   }
 }]]></component>
+  <component name="Push.Settings">
+    <force-push-targets>
+      <force-push-target remote-path="origin" branch="feat/gui-ok" />
+    </force-push-targets>
+  </component>
   <component name="RunManager" selected="Application.DebuggerMain">
     <configuration name="ScriptableDebuggerTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
