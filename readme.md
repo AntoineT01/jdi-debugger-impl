@@ -2,8 +2,8 @@
 ***THOMAS Antoine*** - ***LE GOFF Tanguy***
 
 **Note :** Ce fichier `README.md` concerne uniquement les commandes en CLI, en GUI et le "time travel". 
-Pour consulter le code sur l'interface graphique (GUI), veuillez consulter la branche `feat/gui-ok`.
-Pour consulter le code sur la partie "time travel", veuillez consulter la branche `feat/time-travel`.
+Pour consulter le code sur l'interface graphique (GUI) et les commandes CLI, veuillez consulter la branche `master`.
+Pour consulter le code sur la partie "time travel" et les commandes CLI, veuillez consulter la branche `feat/time-travel`.
 
 ## Installation et Prérequis
 - Java 21+
