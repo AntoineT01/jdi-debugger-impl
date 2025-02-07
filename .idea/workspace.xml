@@ -4,18 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e43af01-702a-46b7-b907-75bce83714a7" name="Changes" comment="refacto: Tests unitaires TOUS fonctionnels">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/DebuggerMain.xml" afterDir="false" />
+    <list default="true" id="6e43af01-702a-46b7-b907-75bce83714a7" name="Changes" comment="feat: Lien fonctionnel mais pas tout focntionne au niveau des commandes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/DebuggerSession.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/DebuggerSession.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/command/StepCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/command/StepCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/BreakpointEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/BreakpointEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/StepEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/StepEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/event/VMStartEventHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/event/VMStartEventHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/graphic/controller/DebuggerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/controller/DebuggerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/graphic/model/DebuggerModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/graphic/model/DebuggerModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/dbg/ui/GUIDebuggerUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dbg/ui/GUIDebuggerUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +48,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="refactor/refactoring-with-gradle" />
+        <entry key="$PROJECT_DIR$" value="feat/time-travel" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -105,7 +96,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "feat/time-travel",
+    "git-widget-placeholder": "feat/gui-ok",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/darwh/OneDrive/UBO_Travail/Semestre_10/Industrialisation du logiciel/jdi-debugger-impl/out/production/classes",
     "node.js.detected.package.eslint": "true",
@@ -224,7 +215,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.ScriptableDebuggerTest" />
-        <item itemvalue="Application.DebuggerMain" />
         <item itemvalue="Gradle.ScriptableDebuggerTest.testBreakBeforeMethodCallCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest.testStepOverCommand" />
         <item itemvalue="Gradle.ScriptableDebuggerTest.testStepCommand" />
@@ -249,6 +239,7 @@
       <updated>1738846641527</updated>
       <workItem from="1738846644888" duration="641000" />
       <workItem from="1738847304737" duration="4977000" />
+      <workItem from="1738913213301" duration="8164000" />
     </task>
     <task id="LOCAL-00001" summary="refacto: Gradle refacto fonctionnel">
       <option name="closed" value="true" />
@@ -274,7 +265,31 @@
       <option name="project" value="LOCAL" />
       <updated>1738851512080</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="feat: Début de lien avec GUI OK">
+      <option name="closed" value="true" />
+      <created>1738860122442</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1738860122442</updated>
+    </task>
+    <task id="LOCAL-00005" summary="feat: Lien fonctionnel mais pas tout focntionne au niveau des commandes">
+      <option name="closed" value="true" />
+      <created>1738920732167</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1738920732167</updated>
+    </task>
+    <task id="LOCAL-00006" summary="feat: Lien fonctionnel mais pas tout focntionne au niveau des commandes">
+      <option name="closed" value="true" />
+      <created>1738922584306</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1738922584306</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -291,7 +306,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/master" />
+                        <option value="origin/feat/gui-ok" />
                       </list>
                     </value>
                   </entry>
@@ -309,16 +324,13 @@
     <MESSAGE value="refacto: Tests unitaires fonctionnels" />
     <MESSAGE value="refacto: Tests unitaires fonctionnels sur quasiment tous les breaks" />
     <MESSAGE value="refacto: Tests unitaires TOUS fonctionnels" />
-    <option name="LAST_COMMIT_MESSAGE" value="refacto: Tests unitaires TOUS fonctionnels" />
+    <MESSAGE value="feat: Début de lien avec GUI OK" />
+    <MESSAGE value="feat: Lien fonctionnel mais pas tout focntionne au niveau des commandes" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: Lien fonctionnel mais pas tout focntionne au niveau des commandes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/java/dbg/ScriptableDebuggerTest.java</url>
-          <line>54</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/dbg/event/MethodEntryEventHandler.java</url>
           <line>23</line>
@@ -335,9 +347,9 @@
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/dbg/ScriptableDebugger.java</url>
-          <line>150</line>
-          <option name="timeStamp" value="16" />
+          <url>file://$PROJECT_DIR$/src/main/java/dbg/event/StepEventHandler.java</url>
+          <line>26</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

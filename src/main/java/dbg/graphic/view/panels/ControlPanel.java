@@ -91,6 +91,7 @@ public class ControlPanel extends JPanel {
     inputPanel.setLayout(new GridLayout(2, 2, 5, 5));
 
     JTextField fileField = new JTextField(20);
+    fileField.setText("dbg.JDISimpleDebuggee");
     JTextField lineField = new JTextField(10);
 
     inputPanel.add(new JLabel("File name:"));

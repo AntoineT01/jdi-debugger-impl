@@ -24,4 +24,8 @@ public class Breakpoint {
   public String toString() {
     return fileName + ":" + lineNumber + (isEnabled ? "" : " (disabled)");
   }
+
+  public String getClassName() {
+    return fileName + ":" + lineNumber;
+  }
 }

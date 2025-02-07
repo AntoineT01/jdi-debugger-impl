@@ -32,6 +32,7 @@ public class DebuggerGUI extends JFrame implements Observer {
     initComponents();
     pack();
     setLocationRelativeTo(null);
+    sourcePanel.updateContent(model.getCurrentSourceCode(), model.getCurrentLine());
   }
 
   private void setupWindow() {

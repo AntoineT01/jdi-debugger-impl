@@ -6,10 +6,20 @@ import java.util.*;
 
 public class DebuggerModel extends Observable {
   private String currentSourceCode;
-  private int currentLine;
   private List<String> callStack;
   private Map<String, String> variables;
   private final List<Breakpoint> breakpoints;
+  private int currentLine;
+
+  public int getCurrentLine() {
+    return currentLine;
+  }
+
+  public void setCurrentLine(int currentLine) {
+    this.currentLine = currentLine;
+    setChanged();
+    notifyObservers();
+  }
 
   public DebuggerModel() {
     callStack = new ArrayList<>();
@@ -21,21 +31,21 @@ public class DebuggerModel extends Observable {
    * Met à jour l'état global du débogueur (source, ligne courante, pile, variables)
    * et le contexte courant.
    */
-  public void updateState(String sourceCode, int line, List<String> stack, Map<String, String> vars) {
+  public void updateState(String sourceCode, List<String> stack, Map<String, String> vars) {
     this.currentSourceCode = sourceCode;
-    this.currentLine = line;
     this.callStack = stack;
     this.variables = vars;
     setChanged();
     notifyObservers();
   }
 
-  public String getCurrentSourceCode() {
-    return currentSourceCode;
+  public void updateState() {
+    setChanged();
+    notifyObservers();
   }
 
-  public int getCurrentLine() {
-    return currentLine;
+  public String getCurrentSourceCode() {
+    return currentSourceCode;
   }
 
   public List<String> getCallStack() {
@@ -62,6 +72,10 @@ public class DebuggerModel extends Observable {
     notifyObservers();
   }
 
+  public void resetBreakpointsStored() {
+    breakpoints.clear();
+  }
+
   public void addBreakpoint(Breakpoint bp) {
     breakpoints.add(bp);
     setChanged();
@@ -70,6 +84,12 @@ public class DebuggerModel extends Observable {
 
   public void removeBreakpoint(Breakpoint bp) {
     breakpoints.remove(bp);
+    setChanged();
+    notifyObservers();
+  }
+
+  public void setCurrentSourceCode(String currentSourceCode) {
+    this.currentSourceCode = currentSourceCode;
     setChanged();
     notifyObservers();
   }

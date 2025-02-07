@@ -96,11 +96,6 @@ public class ScriptableDebugger {
    * ou une commande via le CommandDispatcher qui renvoie une chaîne commençant par "RESUME:".
    * En mode GUI, elle retourne immédiatement, car l'action se fait via des boutons.
    */
-  /**
-   * Attend une commande de l'utilisateur.
-   * En mode CLI (ui.isBlocking()==true), cette méthode lit en boucle jusqu'à obtenir une commande
-   * via le CommandDispatcher qui renvoie une chaîne commençant par "RESUME:" ou, explicitement, la commande "continue".
-   */
   public boolean waitForUser(ThreadReference thread, EventSet eventSet) {
     // Pour les UI non bloquantes (ex. GUI), reprendre immédiatement.
     if (!ui.isBlocking()) {
@@ -180,9 +175,5 @@ public class ScriptableDebugger {
       }
     }
     return handler;
-  }
-
-  public VirtualMachine getVm() {
-    return vm;
   }
 }
